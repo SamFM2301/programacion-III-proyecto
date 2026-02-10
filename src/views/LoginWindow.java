@@ -13,7 +13,7 @@ public class LoginWindow extends JFrame{
 		
 		setTitle("Iniciar Sesion");
 		Toolkit tk = Toolkit.getDefaultToolkit();
-		Image myIcon = tk.getImage("src/img/icono.png");
+		Image myIcon = tk.getImage("src/img/iniciosesion.png");
 		setIconImage(myIcon);
 		
 		LoginView loginView = new LoginView();

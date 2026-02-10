@@ -48,10 +48,22 @@ public class LoginView extends JPanel{
 		title.setForeground(new Color(86, 174, 194));
 		add(title);
 		
+		JLabel user = new JLabel("Usuario *");
+		user.setBounds(60, 115, 350, 40);
+		user.setFont(new Font("Arial", Font.BOLD, 12));
+		user.setForeground(new Color(100, 156, 167));
+		add(user);
+		
 		JTextField userTxt = new JTextField();
 		userTxt.setBounds(60, 150, 350, 40);
 		userTxt.setFont(new Font("Arial", Font.BOLD, 18));
 		add(userTxt);
+		
+		JLabel password = new JLabel("Contraseña *");
+		password.setBounds(60, 205, 350, 40);
+		password.setFont(new Font("Arial", Font.BOLD, 12));
+		password.setForeground(new Color(100, 156, 167));
+		add(password);
 		
 		JPasswordField passwordTxt = new JPasswordField();
 		passwordTxt.setBounds(60, 240, 350, 40);
@@ -59,7 +71,7 @@ public class LoginView extends JPanel{
 		add(passwordTxt);
 		
 		JButton button = new JButton("Iniciar Sesion");
-		button.setBounds(60, 340, 350, 40);
+		button.setBounds(160, 340, 150, 40);
 		add(button);
 	}
 }
