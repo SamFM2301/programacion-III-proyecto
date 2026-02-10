@@ -8,8 +8,6 @@ public class Main {
 		
 		LoginWindow loginWindow = new LoginWindow();
 
-		
-		
 	}
 
 }
