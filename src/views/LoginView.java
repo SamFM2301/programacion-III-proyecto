@@ -2,7 +2,10 @@ package views;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -71,7 +74,26 @@ public class LoginView extends JPanel{
 		add(passwordTxt);
 		
 		JButton button = new JButton("Iniciar Sesion");
-		button.setBounds(160, 340, 150, 40);
+		createButton(button, "/error/icono.png");
 		add(button);
+	}
+	
+	public void createButton(JButton b, String url) {
+		b.setBounds(160, 340, 150, 40);
+		b.setFont(new Font("Arial", Font.BOLD, 16));
+		b.setBackground(new Color(86, 174, 194));
+		b.setForeground(new Color(244, 244, 244));
+		
+		b.setOpaque(true);
+		b.setBorderPainted(false);
+		b.setFocusPainted(false);
+		
+		try {
+			Image icon = ImageIO.read(getClass().getResource(url));
+			icon = icon.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
+			b.setIcon(new ImageIcon(icon));
+		} catch(Exception ex) {
+			System.out.println("No se encontro la imagen");
+		}
 	}
 }
