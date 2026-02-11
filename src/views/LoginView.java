@@ -40,56 +40,55 @@ public class LoginView extends JPanel{
 		
 		setLayout(null);
 		createComponents();
-		
 	}
 
 	
 	public void createComponents() {
-		JLabel title = new JLabel("Iniciar Sesion");
-		title.setBounds(140, 50, 200, 50);
-		title.setFont(new Font("Arial", Font.BOLD, 30));
-		title.setForeground(new Color(86, 174, 194));
-		add(title);
+		JLabel lblTitle = new JLabel("Iniciar Sesion");
+		lblTitle.setBounds(140, 50, 200, 50);
+		lblTitle.setFont(new Font("Arial", Font.BOLD, 30));
+		lblTitle.setForeground(new Color(86, 174, 194));
+		add(lblTitle);
 		
 		//txt error
-		JLabel msmError = new JLabel("Correo o Contraseña incorrecta, Intenta de nuevo.");
-		msmError.setBounds(90, 95, 300, 50);
-		msmError.setFont(new Font("Arial", Font.PLAIN, 12));
-		msmError.setForeground (Color.RED);
-		add(msmError);
-		
-		//Imagen de error
-		JLabel lblError = new JLabel();
-		lblError.setBounds(65, 95, 300, 50);
-		lblError.setIcon(loadIcon("../img/error.png", 20, 20));
+		JLabel lblError = new JLabel("Correo o Contraseña incorrecta, Intenta de nuevo.");
+		lblError.setBounds(90, 95, 300, 50);
+		lblError.setFont(new Font("Arial", Font.PLAIN, 12));
+		lblError.setForeground (Color.RED);
 		add(lblError);
 		
+		//Imagen de error
+		JLabel imgError = new JLabel();
+		imgError.setBounds(65, 95, 300, 50);
+		imgError.setIcon(loadIcon("../img/error.png", 20, 20));
+		add(imgError);
 		
-		JLabel user = new JLabel("Usuario *");
-		user.setBounds(60, 130, 350, 40);
-		user.setFont(new Font("Arial", Font.BOLD, 12));
-		user.setForeground(new Color(100, 156, 167));
-		add(user);
 		
-		JTextField userTxt = new JTextField();
-		userTxt.setBounds(60, 165, 350, 40);
-		userTxt.setFont(new Font("Arial", Font.BOLD, 18));
-		add(userTxt);
+		JLabel lblEmail = new JLabel("Usuario *");
+		lblEmail.setBounds(60, 130, 350, 40);
+		lblEmail.setFont(new Font("Arial", Font.BOLD, 12));
+		lblEmail.setForeground(new Color(100, 156, 167));
+		add(lblEmail);
 		
-		JLabel password = new JLabel("Contraseña *");
-		password.setBounds(60, 220, 350, 40);
-		password.setFont(new Font("Arial", Font.BOLD, 12));
-		password.setForeground(new Color(100, 156, 167));
-		add(password);
+		JTextField txtEmail = new JTextField();
+		txtEmail.setBounds(60, 165, 350, 40);
+		txtEmail.setFont(new Font("Arial", Font.BOLD, 18));
+		add(txtEmail);
 		
-		JPasswordField passwordTxt = new JPasswordField();
-		passwordTxt.setBounds(60, 255, 350, 40);
-		passwordTxt.setFont(new Font("Arial", Font.BOLD, 18));
-		add(passwordTxt);
+		JLabel lblPassword = new JLabel("Contraseña *");
+		lblPassword.setBounds(60, 220, 350, 40);
+		lblPassword.setFont(new Font("Arial", Font.BOLD, 12));
+		lblPassword.setForeground(new Color(100, 156, 167));
+		add(lblPassword);
 		
-		JButton button = new JButton("Iniciar Sesion");
-		createButton(button, "/error/icono.png");
-		add(button);
+		JPasswordField txtPassword = new JPasswordField();
+		txtPassword.setBounds(60, 255, 350, 40);
+		txtPassword.setFont(new Font("Arial", Font.BOLD, 18));
+		add(txtPassword);
+		
+		JButton btnSesion = new JButton("Iniciar Sesion");
+		createButton(btnSesion, "/error/icono.png");
+		add(btnSesion);
 	}
 	
 	private ImageIcon loadIcon(String url, int w,int h) {
