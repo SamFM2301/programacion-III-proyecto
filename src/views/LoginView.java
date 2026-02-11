@@ -51,25 +51,39 @@ public class LoginView extends JPanel{
 		title.setForeground(new Color(86, 174, 194));
 		add(title);
 		
+		//txt error
+		JLabel msmError = new JLabel("Correo o Contraseña incorrecta, Intenta de nuevo.");
+		msmError.setBounds(90, 95, 300, 50);
+		msmError.setFont(new Font("Arial", Font.PLAIN, 12));
+		msmError.setForeground (Color.RED);
+		add(msmError);
+		
+		//Imagen de error
+		JLabel lblError = new JLabel();
+		lblError.setBounds(65, 95, 300, 50);
+		lblError.setIcon(loadIcon("../img/error.png", 20, 20));
+		add(lblError);
+		
+		
 		JLabel user = new JLabel("Usuario *");
-		user.setBounds(60, 115, 350, 40);
+		user.setBounds(60, 130, 350, 40);
 		user.setFont(new Font("Arial", Font.BOLD, 12));
 		user.setForeground(new Color(100, 156, 167));
 		add(user);
 		
 		JTextField userTxt = new JTextField();
-		userTxt.setBounds(60, 150, 350, 40);
+		userTxt.setBounds(60, 165, 350, 40);
 		userTxt.setFont(new Font("Arial", Font.BOLD, 18));
 		add(userTxt);
 		
 		JLabel password = new JLabel("Contraseña *");
-		password.setBounds(60, 205, 350, 40);
+		password.setBounds(60, 220, 350, 40);
 		password.setFont(new Font("Arial", Font.BOLD, 12));
 		password.setForeground(new Color(100, 156, 167));
 		add(password);
 		
 		JPasswordField passwordTxt = new JPasswordField();
-		passwordTxt.setBounds(60, 240, 350, 40);
+		passwordTxt.setBounds(60, 255, 350, 40);
 		passwordTxt.setFont(new Font("Arial", Font.BOLD, 18));
 		add(passwordTxt);
 		
@@ -77,6 +91,18 @@ public class LoginView extends JPanel{
 		createButton(button, "/error/icono.png");
 		add(button);
 	}
+	
+	private ImageIcon loadIcon(String url, int w,int h) {
+		try {
+			Image icono = ImageIO.read(getClass().getResource(url));
+			icono = icono.getScaledInstance(w, h, Image.SCALE_SMOOTH);
+			return new ImageIcon(icono);			
+		}catch(Exception ex) {
+			System.out.println("No está la imagen del ícono");
+		}
+		return null;
+	}
+	
 	
 	public void createButton(JButton b, String url) {
 		b.setBounds(160, 340, 150, 40);
