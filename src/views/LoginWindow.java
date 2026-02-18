@@ -10,7 +10,7 @@ public class LoginWindow extends JFrame{
 	public LoginWindow() {
 		setSize(480, 500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setResizable(false);
+		//setResizable(false);
 		
 		setTitle("Iniciar Sesion");
 		Toolkit tk = Toolkit.getDefaultToolkit();
