@@ -1,22 +1,10 @@
 package views;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Image;
+import java.awt.*;
 
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-import javax.swing.border.Border;
+import javax.swing.*;
+import javax.swing.border.*;
 
 import components.TextPrompt;
 
@@ -42,93 +30,100 @@ public class LoginView extends JPanel{
 	 * 
 	 */
 	
-	public LoginView() {
-		setBackground(new Color(233, 233, 233));
-		setLayout(new BorderLayout());
-		//setBackground(Color.BLUE);
-		Border emptyBorder = BorderFactory.createEmptyBorder(20,10,20,10);
-		setBorder(emptyBorder);
-		
-		JPanel topPanel = new JPanel();
-		topPanel.setBackground(new Color(233, 233, 233));
-		add(topPanel, BorderLayout.NORTH);
-		
-		JLabel lblTitle = new JLabel("Iniciar Sesion");
-		lblTitle.setFont(new Font("Arial", Font.BOLD, 30));
-		lblTitle.setForeground(new Color(86, 174, 194));
-		topPanel.add(lblTitle);
-		
-		crearPanelCentro();
-		createComponents();
-	}
+    private JTextField txtEmail;
+    private JPasswordField txtPassword;
+    private JLabel lblError;
+
+    public LoginView() {
+        setBackground(new Color(233, 233, 233));
+        setLayout(new GridBagLayout()); //lo usamos solo para centrar el panel del login en el centro de la ventana
+        createComponents();
+    }
 	
-	public void crearPanelCentro() {
-		/*
-		JPanel panelCentro = new JPanel(new BorderLayout());
-		panelCentro.setBackground(Color.RED);
-		
-		JPanel panelCentroSur = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		panelCentro.add(panelCentroSur, BorderLayout.SOUTH);
-		panelCentroSur.setBackground(Color.ORANGE);
-		
-		JButton btnInicio = new JButton("Iniciar sesión");
-		panelCentroSur.add(btnInicio);
-		
-		JButton btnCancelar = new JButton("Cancelar");
-		panelCentroSur.add(btnCancelar);
-		
-		add(panelCentro, BorderLayout.CENTER);
-		*/
-		
-		JPanel centralPanel = new JPanel(new BorderLayout());
-		centralPanel.setBackground(new Color(233, 233, 233));
-		
-		JLabel lblError = new JLabel("Correo o Contraseña incorrecta, Intenta de nuevo.");
-		lblError.setFont(new Font("Arial", Font.PLAIN, 12));
-		lblError.setForeground (Color.RED);
-		centralPanel.add(lblError);
-		
-		JLabel lblEmail = new JLabel("Usuario *");
-		lblEmail.setFont(new Font("Arial", Font.BOLD, 12));
-		lblEmail.setForeground(new Color(100, 156, 167));
-		centralPanel.add(lblEmail);
-		
-		JTextField txtEmail = new JTextField();
-		txtEmail.setFont(new Font("Arial", Font.BOLD, 18));
-		centralPanel.add(txtEmail);
-		
-		JLabel lblPassword = new JLabel("Contraseña *");
-		lblPassword.setFont(new Font("Arial", Font.BOLD, 12));
-		lblPassword.setForeground(new Color(100, 156, 167));
-		centralPanel.add(lblPassword);
-		
-		JPasswordField txtPassword = new JPasswordField();
-		txtPassword.setFont(new Font("Arial", Font.BOLD, 18));
-		centralPanel.add(txtPassword);
-		
-		JButton btnSesion = new JButton("Iniciar Sesion");
-		centralPanel.add(btnSesion);
-	}
+    private void createComponents() {
+    	//separar contenedor externo y layout interno
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(244, 244, 244));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(new EmptyBorder(30, 40, 30, 40));
+
+        // TÍTULO
+        JLabel lblTitle = new JLabel("Iniciar Sesión");
+        lblTitle.setFont(new Font("Arial", Font.BOLD, 28));
+        lblTitle.setForeground(new Color(86, 174, 194));
+        lblTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(lblTitle);
+
+        //Crea un espacio para generar separaciones 
+        panel.add(Box.createRigidArea(new Dimension(0, 15)));
+
+        // ERROR
+        lblError = new JLabel("Correo o contraseña incorrecta");
+        lblError.setFont(new Font("Arial", Font.PLAIN, 12));
+        lblError.setForeground(Color.RED);
+        lblError.setVisible(false);//pone la visibilidad del mensaje de error en falso
+        lblError.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(lblError);
+
+        panel.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        // EMAIL
+        JLabel lblEmail = new JLabel("Usuario *");
+        lblEmail.setFont(new Font("Arial", Font.BOLD, 12));
+        lblEmail.setForeground(new Color(100, 156, 167));
+        lblEmail.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(lblEmail);
+
+        panel.add(Box.createRigidArea(new Dimension(0, 5)));
+
+        txtEmail = new JTextField();
+        styleTextField(txtEmail);
+        panel.add(txtEmail);
+
+        //se agrega un placeholder encima de los componentes para que se vea correctamente
+        new TextPrompt("Ingresa tu correo", txtEmail);
+
+        //
+        panel.add(Box.createRigidArea(new Dimension(0, 15)));
+
+        // PASSWORD
+        JLabel lblPassword = new JLabel("Contraseña *");
+        lblPassword.setFont(new Font("Arial", Font.BOLD, 12));
+        lblPassword.setForeground(new Color(100, 156, 167));
+        lblPassword.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(lblPassword);
+
+        panel.add(Box.createRigidArea(new Dimension(0, 5)));
+
+        txtPassword = new JPasswordField();
+        styleTextField(txtPassword);
+        panel.add(txtPassword);
+
+        new TextPrompt("Ingresa tu contraseña", txtPassword);
+
+        panel.add(Box.createRigidArea(new Dimension(0, 25)));
+
+        // BOTÓN
+        JButton btnSesion = new JButton("Iniciar Sesión");
+        btnSesion.setBackground(new Color(86, 174, 194));
+        btnSesion.setForeground(Color.WHITE);
+        btnSesion.setFocusPainted(false);
+        btnSesion.setFont(new Font("Arial", Font.BOLD, 14));
+        btnSesion.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnSesion.setMaximumSize(new Dimension(250, 40));
+        panel.add(btnSesion);
+
+        add(panel); // Lo centramos con GridBagLayout
+    }
 	
-	
-	public void createComponents() {
-		createLabels();
-		createTextFields();
-		createButtons();
-	}
-	
-	private void createLabels() {
-		
-	}
-	
-	private void createTextFields() {
-		
-	}
-	
-	private void createButtons() {
-		
-	}
-	
+	//Define los espacios maximos que pueden ocupar los TextFIeld y configurar los estilos que queramos
+    private void styleTextField(JTextField field) {
+        field.setFont(new Font("Arial", Font.PLAIN, 14));
+        field.setMaximumSize(new Dimension(250, 35));
+        field.setPreferredSize(new Dimension(250, 35));
+        field.setBorder(new LineBorder(new Color(200, 200, 200), 1));
+    }
+    
 	private ImageIcon loadIcon(String url, int w,int h) {
 		try {
 			Image icono = ImageIO.read(getClass().getResource(url));

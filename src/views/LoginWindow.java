@@ -1,5 +1,6 @@
 package views;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 
@@ -10,6 +11,7 @@ public class LoginWindow extends JFrame{
 	public LoginWindow() {
 		setSize(480, 500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBackground(new Color(244, 244, 244));
 		//setResizable(false);
 		
 		setTitle("Iniciar Sesion");
