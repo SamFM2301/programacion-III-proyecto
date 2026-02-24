@@ -79,8 +79,7 @@ public class LoginView extends JPanel{
         txtEmail = new JTextField();
         styleTextField(txtEmail);
         panel.add(txtEmail);
-
-        //se agrega un placeholder encima de los componentes para que se vea correctamente
+        //se agrega un placeholder encima de las etiquetas de texto
         new TextPrompt("Ingresa tu correo", txtEmail);
 
         //
@@ -107,10 +106,9 @@ public class LoginView extends JPanel{
         JButton btnSesion = new JButton("Iniciar Sesión");
         btnSesion.setBackground(new Color(86, 174, 194));
         btnSesion.setForeground(Color.WHITE);
-        btnSesion.setFocusPainted(false);
         btnSesion.setFont(new Font("Arial", Font.BOLD, 14));
         btnSesion.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnSesion.setMaximumSize(new Dimension(250, 40));
+        btnSesion.setMaximumSize(new Dimension(150, 100));
         panel.add(btnSesion);
 
         add(panel); // Lo centramos con GridBagLayout
