@@ -3,12 +3,19 @@ package components;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.RoundRectangle2D;
 
 public class RoundButton extends JButton {
 
+	private int radius = 25;
     private boolean drawBorder;      // Bandera que indica si se dibuja o no el borde
     private float borderThickness;   // Grosor del borde
 
+    public void setRadius(int radius) {
+        this.radius = radius;
+        repaint();
+    }
+    
     public RoundButton(String label) {
         super(label);
         // Ajustes para eliminar el look & feel rectangular
@@ -63,7 +70,7 @@ public class RoundButton extends JButton {
         } else {
             g2.setColor(getBackground());
         }
-        g2.fillOval(0, 0, getWidth(), getHeight());
+        g2.fillRoundRect(0, 0, getWidth(), getHeight(), radius, radius);
         g2.dispose();
 
         // Se llama al super para que se pinte el texto
@@ -86,7 +93,7 @@ public class RoundButton extends JButton {
              * del óvalo en función del grosor. Así el borde queda dentro del botón.
              */
             int offset = (int) (borderThickness / 2);
-            g2.drawOval(offset, offset, getWidth() - offset * 2, getHeight() - 1 - offset * 2);
+            g2.drawRoundRect(offset, offset, getWidth() - offset * 2, getHeight() - 1 - offset * 2, radius, radius);
 
             g2.dispose();
         }
@@ -94,8 +101,7 @@ public class RoundButton extends JButton {
 
     @Override
     public boolean contains(int x, int y) {
-        // Área clicable en forma de círculo
-        Ellipse2D shape = new Ellipse2D.Float(0, 0, getWidth(), getHeight());
+        Shape shape = new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), radius, radius);
         return shape.contains(x, y);
     }
 

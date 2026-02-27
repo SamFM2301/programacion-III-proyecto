@@ -38,8 +38,8 @@ public class Main {
 		UIManager.put("TextField.font", AppFont.normal());
 		UIManager.put("Button.font", AppFont.normal());
 		
-		//LoginWindow loginWindow = new LoginWindow(); 
-		RegisterForm registerWindow = new RegisterForm();
+		LoginWindow loginWindow = new LoginWindow(); 
+		//RegisterForm registerWindow = new RegisterForm();
 		
 	}
 

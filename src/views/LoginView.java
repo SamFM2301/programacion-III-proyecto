@@ -1,115 +1,143 @@
 package views;
 
+import javax.swing.*;
+import components.RoundButton;
+import components.TextPrompt;
+import img.ImagePanel;
+
 import java.awt.*;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.border.*;
+public class LoginView extends JFrame {
 
-import components.TextPrompt;
-
-public class LoginView extends JPanel{
-	
-    private JTextField txtEmail;
-    private JPasswordField txtPassword;
-    private JLabel lblError;
+    private JLabel lblMensajeError;
 
     public LoginView() {
-        setBackground(new Color(233, 233, 233));
-        setLayout(new GridBagLayout()); //lo usamos solo para centrar el panel del login en el centro de la ventana
-        createComponents();
-    }
-	
-    private void createComponents() {
-    	//separar contenedor externo y layout interno
-        JPanel panel = new JPanel();
-        panel.setBackground(new Color(244, 244, 244));
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBorder(new EmptyBorder(30, 40, 30, 40));
+        setTitle("Login");
+        setSize(750, 450);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
 
+        
+        
+        Toolkit tk = Toolkit.getDefaultToolkit(); 
+        Image icono = tk.getImage("src/img/iniciosesion.png"); 
+        setIconImage(icono);
+        
+        
+        // Panel principal (fondo)
+        JPanel panelPrincipal = new JPanel(new GridBagLayout());
+        panelPrincipal.setBackground(new Color(57, 94, 102));
+
+        
+        
+        // Panel contenedor dividido en 2 partes
+        JPanel panelContenedor = new JPanel(new BorderLayout());
+        panelContenedor.setBackground(Color.WHITE);
+
+        
+        
+        // PANEL IZQUIERDO (IMAGEN)
+        ImagePanel panelImagen = new ImagePanel("/img/welcome.png");
+        panelImagen.setPreferredSize(new Dimension(300, 0));
+        panelContenedor.add(panelImagen, BorderLayout.WEST);
+
+        
+        
+
+        // PANEL DERECHO (FORMULARIO)   
+        JPanel panelFormulario = new JPanel(new GridBagLayout());
+        panelFormulario.setBackground(new Color(56, 125, 122));
+        panelFormulario.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+
+        GridBagConstraints gridConstraints = new GridBagConstraints();
+        gridConstraints.insets = new Insets(8, 5, 8, 5);
+        gridConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridConstraints.gridx = 0;
+
+        
+        
         // TÍTULO
-        JLabel lblTitle = new JLabel("Iniciar Sesión");
-        lblTitle.setFont(new Font("Arial", Font.BOLD, 28));
-        lblTitle.setForeground(new Color(86, 174, 194));
-        lblTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(lblTitle);
+        JLabel lblTitulo = new JLabel("INICIAR SESIÓN", SwingConstants.CENTER);
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 20));
+        lblTitulo.setForeground(Color.WHITE);
 
-        //Crea un espacio para generar separaciones 
-        panel.add(Box.createRigidArea(new Dimension(0, 15)));
+        gridConstraints.gridy = 0;
+        panelFormulario.add(lblTitulo, gridConstraints);
 
-        // ERROR
-        lblError = new JLabel("Correo o contraseña incorrecta");
-        lblError.setFont(new Font("Arial", Font.PLAIN, 12));
-        lblError.setForeground(Color.RED);
-        lblError.setVisible(false);//pone la visibilidad del mensaje de error en falso
-        lblError.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(lblError);
+        
+        
+        // USUARIO
+        gridConstraints.gridy = 1;
+        JLabel lblUsuario = new JLabel("Usuario*");
+        lblUsuario.setForeground(Color.WHITE);
+        panelFormulario.add(lblUsuario, gridConstraints);
 
-        panel.add(Box.createRigidArea(new Dimension(0, 20)));
+        gridConstraints.gridy = 2;
+        JTextField txtUsuario = new JTextField(15);
+        panelFormulario.add(txtUsuario, gridConstraints);
 
-        // EMAIL
-        JLabel lblEmail = new JLabel("Usuario *");
-        lblEmail.setFont(new Font("Arial", Font.BOLD, 12));
-        lblEmail.setForeground(new Color(100, 156, 167));
-        lblEmail.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(lblEmail);
+        TextPrompt usuarioPlaceholder = new TextPrompt("Ingresa tu usuario", txtUsuario);
+        usuarioPlaceholder.changeAlpha(0.6f);
 
-        panel.add(Box.createRigidArea(new Dimension(0, 5)));
+        
+        
+        // CONTRASEÑA
+        gridConstraints.gridy = 3;
+        JLabel lblPass = new JLabel("Contraseña*");
+        lblPass.setForeground(Color.WHITE);
+        panelFormulario.add(lblPass, gridConstraints);
 
-        txtEmail = new JTextField();
-        styleTextField(txtEmail);
-        panel.add(txtEmail);
-        //se agrega un placeholder encima de las etiquetas de texto
-        new TextPrompt("Ingresa tu correo", txtEmail);
+        gridConstraints.gridy = 4;
+        JPasswordField txtPassword = new JPasswordField(15);
+        panelFormulario.add(txtPassword, gridConstraints);
 
-        //
-        panel.add(Box.createRigidArea(new Dimension(0, 15)));
+        TextPrompt passPlaceholder = new TextPrompt("Ingresa tu contraseña", txtPassword);
+        passPlaceholder.changeAlpha(0.6f);
 
-        // PASSWORD
-        JLabel lblPassword = new JLabel("Contraseña *");
-        lblPassword.setFont(new Font("Arial", Font.BOLD, 12));
-        lblPassword.setForeground(new Color(100, 156, 167));
-        lblPassword.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(lblPassword);
+        
+        
+        // MENSAJE ERROR
+        gridConstraints.gridy = 5;
+        lblMensajeError = new JLabel("Usuario o contraseña incorrectos");
+        lblMensajeError.setForeground(Color.YELLOW);
+        lblMensajeError.setHorizontalAlignment(SwingConstants.CENTER);
+        lblMensajeError.setVisible(false);
+        panelFormulario.add(lblMensajeError, gridConstraints);
 
-        panel.add(Box.createRigidArea(new Dimension(0, 5)));
+        
+        
+        // BOTONES
+        gridConstraints.gridy = 6;
+        gridConstraints.insets = new Insets(20, 5, 5, 5);
 
-        txtPassword = new JPasswordField();
-        styleTextField(txtPassword);
-        panel.add(txtPassword);
+        JPanel panelBotones = new JPanel();
+        panelBotones.setOpaque(false);
 
-        new TextPrompt("Ingresa tu contraseña", txtPassword);
+        RoundButton btnIniciar = new RoundButton("Iniciar");
+        btnIniciar.setPreferredSize(new Dimension(120, 40));
 
-        panel.add(Box.createRigidArea(new Dimension(0, 25)));
+        RoundButton btnRegistrar = new RoundButton("Registrar");
+        btnRegistrar.setPreferredSize(new Dimension(120, 40));
 
-        // BOTÓN
-        JButton btnSesion = new JButton("Iniciar Sesión");
-        btnSesion.setBackground(new Color(86, 174, 194));
-        btnSesion.setForeground(Color.WHITE);
-        btnSesion.setFont(new Font("Arial", Font.BOLD, 14));
-        btnSesion.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnSesion.setMaximumSize(new Dimension(150, 100));
-        panel.add(btnSesion);
+        panelBotones.add(btnIniciar);
+        panelBotones.add(btnRegistrar);
 
-        add(panel); // Lo centramos con GridBagLayout
+        panelFormulario.add(panelBotones, gridConstraints);
+
+        panelContenedor.add(panelFormulario, BorderLayout.CENTER);
+        panelPrincipal.add(panelContenedor);
+        add(panelPrincipal);
     }
-	
-	//Define los espacios maximos que pueden ocupar los TextFIeld y configurar los estilos que queramos
-    private void styleTextField(JTextField field) {
-        field.setFont(new Font("Arial", Font.PLAIN, 14));
-        field.setMaximumSize(new Dimension(250, 35));
-        field.setPreferredSize(new Dimension(250, 35));
-        field.setBorder(new LineBorder(new Color(200, 200, 200), 1));
+
+    
+    // Método para mostrar error
+    public void mostrarError(String mensaje) {
+        lblMensajeError.setText(mensaje);
+        lblMensajeError.setVisible(true);
     }
     
-	private ImageIcon loadIcon(String url, int w,int h) {
-		try {
-			Image icono = ImageIO.read(getClass().getResource(url));
-			icono = icono.getScaledInstance(w, h, Image.SCALE_SMOOTH);
-			return new ImageIcon(icono);			
-		}catch(Exception ex) {
-			System.out.println("No está la imagen del ícono");
-		}
-		return null;
-	}
+
+    public static void main(String[] args) {       
+            new LoginView().setVisible(true);
+    }
 }
