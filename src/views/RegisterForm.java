@@ -3,55 +3,54 @@ package views;
 import java.util.Iterator;
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
 import utils.AppFont;
 
 public class RegisterForm extends JFrame{
 
 	public RegisterForm() {
-		setSize(480, 500);
+		setSize(560, 800);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(true);
 		setTitle("Registro");
 		setLocationRelativeTo(null);
-
+		
+		Toolkit tk = Toolkit.getDefaultToolkit();
+		Image myIcon = tk.getImage("src/img/iniciosesion.png");
+		setIconImage(myIcon);
+		
 		createComponents();
 		
 		setVisible(true);
 	}
 	
 	public void createComponents() {
-		JPanel panelComponents = new JPanel();
-		panelComponents.setLayout(new BoxLayout(panelComponents, BoxLayout.Y_AXIS));
-		panelComponents.setBorder(BorderFactory.createEmptyBorder(20, 70, 20, 70));
-		panelComponents.setAlignmentX(CENTER_ALIGNMENT);
+		JPanel mainPanel = new JPanel(new BorderLayout());
+		mainPanel.setBorder(new EmptyBorder(20, 30, 20, 30));
 		
-		JLabel lblTitle = new JLabel("Registro");
+		JLabel lblTitle = new JLabel("Registro de Usuario");
 		lblTitle.setFont(AppFont.title());
-		lblTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
-		panelComponents.add(lblTitle);
+		mainPanel.add(lblTitle, BorderLayout.NORTH);
 		
-		JLabel lblName = new JLabel("Ingresa tu nombre:");
-		panelComponents.add(lblName);
-		JTextField txtName = new JTextField();
-		panelComponents.add(txtName);
 		
-		JLabel lblEmail = new JLabel("Ingresa tu correo:");
-		panelComponents.add(lblEmail);
-		JTextField txtEmail = new JTextField();
-		panelComponents.add(txtEmail);
+		JButton btnRegistrar = new JButton("Registrar");
+		mainPanel.add(btnRegistrar, BorderLayout.SOUTH);
 		
-		JLabel lblPassword = new JLabel("Crea tu contraseña:");
-		panelComponents.add(lblPassword);
-		JTextField txtPassword = new JTextField();
-		panelComponents.add(txtPassword);
-
-		JButton btnRegister = new JButton("Registrar");
-		btnRegister.setAlignmentX(CENTER_ALIGNMENT);
-		panelComponents.add(btnRegister);
-		
-		JScrollPane scroll = new JScrollPane(panelComponents);
-		scroll.setHorizontalScrollBar(null);
-		
-		add(scroll);
+		add(mainPanel);
 	}	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -9,26 +9,6 @@ import javax.swing.border.*;
 import components.TextPrompt;
 
 public class LoginView extends JPanel{
-	/*
-	 * PALETA DE COLORES
-	 * 
-	 * - AZUL CLARO 
-	 * HEX #56AEC2
-	 * RGB 86, 174, 194
-	 * 
-	 * - CYAN
-	 * HEX #649CA7
-	 * RGB 100, 156, 167
-	 * 
-	 * - BLANCO OPACO
-	 * HEX #E9E9E9
-	 * RGB 233, 233, 233
-	 * 
-	 * - BLANCO CLARO 
-	 * HEX #F4F4F4
-	 * RGB 244, 244, 244
-	 * 
-	 */
 	
     private JTextField txtEmail;
     private JPasswordField txtPassword;
