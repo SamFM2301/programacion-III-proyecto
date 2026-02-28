@@ -17,44 +17,32 @@ public class LoginView extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        
-        
         Toolkit tk = Toolkit.getDefaultToolkit(); 
         Image icono = tk.getImage("src/img/iniciosesion.png"); 
-        setIconImage(icono);
-        
+        setIconImage(icono);  
         
         // Panel principal (fondo)
-        JPanel panelPrincipal = new JPanel(new GridBagLayout());
-        panelPrincipal.setBackground(new Color(57, 94, 102));
+        JPanel mainPanel = new JPanel(new GridBagLayout());
+        mainPanel.setBackground(new Color(57, 94, 102));
 
-        
-        
         // Panel contenedor dividido en 2 partes
-        JPanel panelContenedor = new JPanel(new BorderLayout());
-        panelContenedor.setBackground(Color.WHITE);
-
-        
+        JPanel containerPanel = new JPanel(new BorderLayout());
+        containerPanel.setBackground(Color.WHITE);
         
         // PANEL IZQUIERDO (IMAGEN)
-        ImagePanel panelImagen = new ImagePanel("/img/welcome.png");
-        panelImagen.setPreferredSize(new Dimension(300, 0));
-        panelContenedor.add(panelImagen, BorderLayout.WEST);
-
-        
-        
+        ImagePanel imagePanel = new ImagePanel("/img/welcome.png");
+        imagePanel.setPreferredSize(new Dimension(300, 0));
+        containerPanel.add(imagePanel, BorderLayout.WEST);
 
         // PANEL DERECHO (FORMULARIO)   
-        JPanel panelFormulario = new JPanel(new GridBagLayout());
-        panelFormulario.setBackground(new Color(56, 125, 122));
-        panelFormulario.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBackground(new Color(56, 125, 122));
+        formPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
 
         GridBagConstraints gridConstraints = new GridBagConstraints();
         gridConstraints.insets = new Insets(8, 5, 8, 5);
         gridConstraints.fill = GridBagConstraints.HORIZONTAL;
-        gridConstraints.gridx = 0;
-
-        
+        gridConstraints.gridx = 0; 
         
         // TÍTULO
         JLabel lblTitulo = new JLabel("INICIAR SESIÓN", SwingConstants.CENTER);
@@ -62,50 +50,42 @@ public class LoginView extends JFrame {
         lblTitulo.setForeground(Color.WHITE);
 
         gridConstraints.gridy = 0;
-        panelFormulario.add(lblTitulo, gridConstraints);
+        formPanel.add(lblTitulo, gridConstraints);
 
-        
-        
         // USUARIO
         gridConstraints.gridy = 1;
         JLabel lblUsuario = new JLabel("Usuario*");
         lblUsuario.setForeground(Color.WHITE);
-        panelFormulario.add(lblUsuario, gridConstraints);
+        formPanel.add(lblUsuario, gridConstraints);
 
         gridConstraints.gridy = 2;
         JTextField txtUsuario = new JTextField(15);
-        panelFormulario.add(txtUsuario, gridConstraints);
+        formPanel.add(txtUsuario, gridConstraints);
 
         TextPrompt usuarioPlaceholder = new TextPrompt("Ingresa tu usuario", txtUsuario);
         usuarioPlaceholder.changeAlpha(0.6f);
-
-        
         
         // CONTRASEÑA
         gridConstraints.gridy = 3;
         JLabel lblPass = new JLabel("Contraseña*");
         lblPass.setForeground(Color.WHITE);
-        panelFormulario.add(lblPass, gridConstraints);
+        formPanel.add(lblPass, gridConstraints);
 
         gridConstraints.gridy = 4;
         JPasswordField txtPassword = new JPasswordField(15);
-        panelFormulario.add(txtPassword, gridConstraints);
+        formPanel.add(txtPassword, gridConstraints);
 
         TextPrompt passPlaceholder = new TextPrompt("Ingresa tu contraseña", txtPassword);
         passPlaceholder.changeAlpha(0.6f);
-
-        
-        
+   
         // MENSAJE ERROR
         gridConstraints.gridy = 5;
         lblMensajeError = new JLabel("Usuario o contraseña incorrectos");
-        lblMensajeError.setForeground(Color.YELLOW);
+        lblMensajeError.setForeground(Color.RED);
         lblMensajeError.setHorizontalAlignment(SwingConstants.CENTER);
-        lblMensajeError.setVisible(false);
-        panelFormulario.add(lblMensajeError, gridConstraints);
+        lblMensajeError.setVisible(true);
+        formPanel.add(lblMensajeError, gridConstraints);
 
-        
-        
         // BOTONES
         gridConstraints.gridy = 6;
         gridConstraints.insets = new Insets(20, 5, 5, 5);
@@ -122,22 +102,12 @@ public class LoginView extends JFrame {
         panelBotones.add(btnIniciar);
         panelBotones.add(btnRegistrar);
 
-        panelFormulario.add(panelBotones, gridConstraints);
+        formPanel.add(panelBotones, gridConstraints);
 
-        panelContenedor.add(panelFormulario, BorderLayout.CENTER);
-        panelPrincipal.add(panelContenedor);
-        add(panelPrincipal);
-    }
-
-    
-    // Método para mostrar error
-    public void mostrarError(String mensaje) {
-        lblMensajeError.setText(mensaje);
-        lblMensajeError.setVisible(true);
-    }
-    
-
-    public static void main(String[] args) {       
-            new LoginView().setVisible(true);
+        containerPanel.add(formPanel, BorderLayout.CENTER);
+        mainPanel.add(containerPanel);
+        add(mainPanel);
+        
+        setVisible(true);
     }
 }

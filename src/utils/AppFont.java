@@ -19,11 +19,15 @@ public class AppFont {
 	}
 	
 	public static Font normal() {
-		return base.deriveFont(14f);
+		return base.deriveFont(16f);
+	}
+	
+	public static Font bold() {
+		return base.deriveFont(Font.BOLD, 16f);
 	}
 	
 	public static Font small() {
-		return base.deriveFont(12f);
+		return base.deriveFont(14f);
 	}
 	
 	public static Font title() {

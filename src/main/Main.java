@@ -32,14 +32,22 @@ public class Main {
 
 	public static void main(String[] args) {
 		
+		try {
+	        UIManager.setLookAndFeel(
+	            UIManager.getSystemLookAndFeelClassName()
+	        );
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+		
 		//FlatLightLaf.setup(); 
 		
 		UIManager.put("Label.font", AppFont.normal());
 		UIManager.put("TextField.font", AppFont.normal());
 		UIManager.put("Button.font", AppFont.normal());
 		
-		LoginWindow loginWindow = new LoginWindow(); 
-		//RegisterForm registerWindow = new RegisterForm();
+		//LoginWindow loginWindow = new LoginWindow(); 
+		RegisterForm registerWindow = new RegisterForm();
 		
 	}
 
