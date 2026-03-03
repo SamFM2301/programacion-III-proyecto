@@ -4,16 +4,20 @@ import javax.swing.*;
 import components.RoundButton;
 import components.TextPrompt;
 import img.ImagePanel;
+import utils.AppFont;
 
 import java.awt.*;
 
 public class LoginView extends JFrame {
 
-    private JLabel lblMensajeError;
+	private JLabel lblErrorUsuario;
+	private JLabel lblErrorPassword;
+    private JTextField txtUsuario;
+    private JPasswordField txtPassword;
 
     public LoginView() {
         setTitle("Login");
-        setSize(750, 450);
+        setSize(750, 480);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -59,35 +63,44 @@ public class LoginView extends JFrame {
         formPanel.add(lblUsuario, gridConstraints);
 
         gridConstraints.gridy = 2;
-        JTextField txtUsuario = new JTextField(15);
+        txtUsuario = new JTextField(15);
         formPanel.add(txtUsuario, gridConstraints);
 
         TextPrompt usuarioPlaceholder = new TextPrompt("Ingresa tu usuario", txtUsuario);
         usuarioPlaceholder.changeAlpha(0.6f);
         
-        // CONTRASEÑA
         gridConstraints.gridy = 3;
+        lblErrorUsuario = new JLabel("");
+        lblErrorUsuario.setFont(AppFont.small());
+        lblErrorUsuario.setForeground(Color.RED);
+        lblErrorUsuario.setHorizontalAlignment(SwingConstants.LEFT);
+        lblErrorUsuario.setVisible(true); // luego lo puedes poner en false
+        formPanel.add(lblErrorUsuario, gridConstraints);
+        
+        // CONTRASEÑA
+        gridConstraints.gridy = 4;
         JLabel lblPass = new JLabel("Contraseña*");
         lblPass.setForeground(Color.WHITE);
         formPanel.add(lblPass, gridConstraints);
 
-        gridConstraints.gridy = 4;
-        JPasswordField txtPassword = new JPasswordField(15);
+        gridConstraints.gridy = 5;
+        txtPassword = new JPasswordField(15);
         formPanel.add(txtPassword, gridConstraints);
 
         TextPrompt passPlaceholder = new TextPrompt("Ingresa tu contraseña", txtPassword);
         passPlaceholder.changeAlpha(0.6f);
    
         // MENSAJE ERROR
-        gridConstraints.gridy = 5;
-        lblMensajeError = new JLabel("Usuario o contraseña incorrectos");
-        lblMensajeError.setForeground(Color.RED);
-        lblMensajeError.setHorizontalAlignment(SwingConstants.CENTER);
-        lblMensajeError.setVisible(true);
-        formPanel.add(lblMensajeError, gridConstraints);
+        gridConstraints.gridy = 6;
+        lblErrorPassword = new JLabel("");
+        lblErrorPassword.setFont(AppFont.small());
+        lblErrorPassword.setForeground(Color.RED);
+        lblErrorPassword.setHorizontalAlignment(SwingConstants.LEFT);
+        lblErrorPassword.setVisible(true); // luego lo puedes ocultar
+        formPanel.add(lblErrorPassword, gridConstraints);
 
         // BOTONES
-        gridConstraints.gridy = 6;
+        gridConstraints.gridy = 7;
         gridConstraints.insets = new Insets(20, 5, 5, 5);
 
         JPanel panelBotones = new JPanel();
@@ -95,6 +108,16 @@ public class LoginView extends JFrame {
 
         RoundButton btnIniciar = new RoundButton("Iniciar");
         btnIniciar.setPreferredSize(new Dimension(120, 40));
+        
+        btnIniciar.addActionListener(e -> {
+
+            if (validateFields()) {
+            	showMessageLoginSuccesful();
+                resetErrorMsg();
+                resetFields();
+            }
+
+        });
 
         RoundButton btnRegistrar = new RoundButton("Registrar");
         btnRegistrar.setPreferredSize(new Dimension(120, 40));
@@ -110,4 +133,62 @@ public class LoginView extends JFrame {
         
         setVisible(true);
     }
+    
+    public boolean validateFields() {
+    	boolean isValid = true;
+    	
+    	String userName = txtUsuario.getText().trim();
+    	String password = new String(txtPassword.getPassword()).trim();
+    	
+    	if (userName.isEmpty()) {
+    		lblErrorUsuario.setText("El correo es obligatorio");
+    		lblErrorUsuario.setVisible(true);
+    		isValid = false;
+    	} else {
+    		lblErrorUsuario.setText("");
+    	}
+    	
+    	if (password.isEmpty()) {
+    		lblErrorPassword.setText("Contraseña es obligatoria");
+    		lblErrorPassword.setVisible(true);
+    		isValid = false;
+    	} else {
+    		lblErrorPassword.setText("");
+    	}
+    	
+    	return isValid;
+    }
+    
+    public void resetErrorMsg() {
+    	lblErrorUsuario.setText("");
+    	lblErrorPassword.setText("");
+    }
+    
+    public void resetFields() {
+    	txtUsuario.setText("");
+    	txtPassword.setText("");
+    }
+    
+    public void showMessageLoginSuccesful() {
+    	JOptionPane.showMessageDialog(
+			this, 
+			"Se inicio sesion", 
+			"Sesion iniciada.",
+			JOptionPane.INFORMATION_MESSAGE
+    	);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
