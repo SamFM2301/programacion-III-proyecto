@@ -1,186 +1,319 @@
 package views;
 
-import java.util.Iterator;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
-import components.RoundButton;
-import img.ImagePanel;
-
 import java.time.LocalDate;
-import java.time.Year;
 
+import img.ImagePanel;
 import utils.AppFont;
+import components.ErrorLabel;
 
-public class RegisterForm extends JFrame{
+public class RegisterForm extends JFrame {
 
-	public RegisterForm() {
-		initFrame();
-		initComponents();
-	}
-	
-	private void initFrame() {
-		setTitle("Registro de Usuario");
-		
-		Toolkit tk = Toolkit.getDefaultToolkit(); 
-        Image icono = tk.getImage("src/img/iniciosesion.png"); 
+    private JTextField txtName;
+    private JTextField txtEmail;
+    private JPanel datePanel;
+    private JPanel sexPanel;
+    private JPasswordField txtPassword;
+    private JPasswordField txtConfirmPassword;
+    private JCheckBox chkTerms;
+
+    private ButtonGroup bgSex;
+    private ErrorLabel lblErrorName;
+    private JLabel lblErrorEmail;
+    private JLabel lblErrorDate;
+    private JLabel lblErrorGender;
+    private JLabel lblErrorPassword;
+    private JLabel lblErrorTerms;
+
+    public RegisterForm() {
+        initFrame();
+        initComponents();
+    }
+
+    private void initFrame() {
+        setTitle("Registro de Usuario");
+
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        Image icono = tk.getImage("src/img/iniciosesion.png");
         setIconImage(icono);
-		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setMinimumSize(new Dimension(1000, 750));
-		setLocationRelativeTo(null);
-	}
-	
-	private void initComponents() {
-		JPanel mainPanel = new JPanel(new GridLayout(1, 2));
-		mainPanel.setBackground(new Color(57, 94, 102));
-		mainPanel.setBorder(new EmptyBorder(50, 50, 50, 50));
-		
-		mainPanel.add(createFormPanel());
-		mainPanel.add(createImagePanel());
-		
-		add(mainPanel);
-		setVisible(true);
-	}
-	
-	private JPanel createFormPanel() {
-		JPanel formPanel = new JPanel();
-	    formPanel.setBackground(Color.WHITE);
-	    formPanel.setLayout(new GridBagLayout());
 
-	    GridBagConstraints gbc = new GridBagConstraints();
-	    gbc.insets = new Insets(8, 10, 8, 10);
-	    gbc.fill = GridBagConstraints.HORIZONTAL;
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setMinimumSize(new Dimension(1000, 750));
+        setLocationRelativeTo(null);
+    }
 
-	    // TITULO
-	    JLabel lblTitle = new JLabel("Registro de Usuario");
-	    lblTitle.setFont(AppFont.title());
-	    lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+    private void initComponents() {
+        JPanel mainPanel = new JPanel(new GridLayout(1, 2));
+        mainPanel.setBackground(new Color(57, 94, 102));
+        mainPanel.setBorder(new EmptyBorder(50, 50, 50, 50));
 
-	    gbc.gridx = 0;
-	    gbc.gridy = 0;
-	    gbc.gridwidth = 2;
-	    formPanel.add(lblTitle, gbc);
+        mainPanel.add(createFormPanel());
+        mainPanel.add(createImagePanel());
 
-	    gbc.gridwidth = 1;
+        add(mainPanel);
+        setVisible(true);
+    }
 
-	    // NOMBRE
-	    gbc.gridy++;
-	    formPanel.add(new JLabel("Nombre *"), gbc);
+    private JPanel createFormPanel() {
+        JPanel formPanel = new JPanel();
+        formPanel.setBackground(Color.WHITE);
+        formPanel.setLayout(new GridBagLayout());
 
-	    gbc.gridy++;
-	    JTextField txtName = new JTextField(20);
-	    formPanel.add(txtName, gbc);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(4, 10, 4, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        
 
-	    // CORREO
-	    gbc.gridy++;
-	    formPanel.add(new JLabel("Correo *"), gbc);
+        // Inicializar labels error
+        lblErrorName = new ErrorLabel();
+        lblErrorEmail = createErrorLabel();
+        lblErrorDate = createErrorLabel();
+        lblErrorGender = createErrorLabel();
+        lblErrorPassword = createErrorLabel();
+        lblErrorTerms = createErrorLabel();
 
-	    gbc.gridy++;
-	    JTextField txtEmail = new JTextField(20);
-	    formPanel.add(txtEmail, gbc);
+        // TITULO
+        JLabel lblTitle = new JLabel("Registro de Usuario");
+        lblTitle.setFont(AppFont.title());
+        lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 
-	    // FECHA
-	    gbc.gridy++;
-	    formPanel.add(new JLabel("Fecha Nacimiento *"), gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        formPanel.add(lblTitle, gbc);
+        gbc.gridwidth = 1;
 
-	    gbc.gridy++;
-	    JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        // NOMBRE
+        gbc.gridy++;
+        formPanel.add(new JLabel("Nombre *"), gbc);
 
-	    JComboBox<Integer> cbxDay = new JComboBox<>();
-	    for (int i = 1; i <= 31; i++) cbxDay.addItem(i);
+        gbc.gridy++;
+        txtName = new JTextField(20);
+        formPanel.add(txtName, gbc);
 
-	    JComboBox<Integer> cbxMonth = new JComboBox<>();
-	    for (int i = 1; i <= 12; i++) cbxMonth.addItem(i);
+        gbc.gridy++;
+        formPanel.add(lblErrorName, gbc);
 
-	    JComboBox<Integer> cbxYear = new JComboBox<>();
-	    int currentYear = LocalDate.now().getYear();
-	    for (int i = 0; i < 100; i++) cbxYear.addItem(currentYear - i);
+        // EMAIL
+        gbc.gridy++;
+        formPanel.add(new JLabel("Correo *"), gbc);
 
-	    JLabel lblDay = new JLabel("Dia:");
-	    datePanel.add(lblDay);
-	    datePanel.add(cbxDay);
-	    
-	    JLabel lblMonth = new JLabel("Mes:");
-	    datePanel.add(lblMonth);
-	    datePanel.add(cbxMonth);
-	    
-	    JLabel lblYear = new JLabel("Año:");
-	    datePanel.add(lblYear);
-	    datePanel.add(cbxYear);
+        gbc.gridy++;
+        txtEmail = new JTextField(20);
+        formPanel.add(txtEmail, gbc);
 
-	    formPanel.add(datePanel, gbc);
+        gbc.gridy++;
+        formPanel.add(lblErrorEmail, gbc);
 
-	    // SEXO
-	    gbc.gridy++;
-	    formPanel.add(new JLabel("Sexo"), gbc);
+        // FECHA
+        gbc.gridy++;
+        formPanel.add(new JLabel("Fecha Nacimiento *"), gbc);
 
-	    gbc.gridy++;
-	    JPanel sexPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
+        gbc.gridy++;
+        datePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        datePanel.setBackground(Color.WHITE);
 
-	    JRadioButton rbMan = new JRadioButton("Hombre");
-	    rbMan.setCursor(new Cursor(Cursor.HAND_CURSOR));
-	    JRadioButton rbWomen = new JRadioButton("Mujer");
-	    rbWomen.setCursor(new Cursor(Cursor.HAND_CURSOR));
-	    JRadioButton rbOther = new JRadioButton("Otro");
-	    rbOther.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        JComboBox<Integer> cbxDay = new JComboBox<>();
+        for (int i = 1; i <= 31; i++) cbxDay.addItem(i);
 
-	    ButtonGroup bgSex = new ButtonGroup();
-	    bgSex.add(rbMan);
-	    bgSex.add(rbWomen);
-	    bgSex.add(rbOther);
+        JComboBox<Integer> cbxMonth = new JComboBox<>();
+        for (int i = 1; i <= 12; i++) cbxMonth.addItem(i);
 
-	    sexPanel.add(rbMan);
-	    sexPanel.add(rbWomen);
-	    sexPanel.add(rbOther);
+        JComboBox<Integer> cbxYear = new JComboBox<>();
+        int currentYear = LocalDate.now().getYear();
+        for (int i = 0; i < 100; i++) cbxYear.addItem(currentYear - i);
 
-	    formPanel.add(sexPanel, gbc);
+        datePanel.add(new JLabel("Día:"));
+        datePanel.add(cbxDay);
+        datePanel.add(new JLabel("Mes:"));
+        datePanel.add(cbxMonth);
+        datePanel.add(new JLabel("Año:"));
+        datePanel.add(cbxYear);
 
-	    // CONTRASEÑA
-	    gbc.gridy++;
-	    formPanel.add(new JLabel("Contraseña *"), gbc);
+        formPanel.add(datePanel, gbc);
 
-	    gbc.gridy++;
-	    JPasswordField txtPassword = new JPasswordField(20);
-	    formPanel.add(txtPassword, gbc);
+        gbc.gridy++;
+        formPanel.add(lblErrorDate, gbc);
 
-	    // CONFIRMAR
-	    gbc.gridy++;
-	    formPanel.add(new JLabel("Confirmar Contraseña *"), gbc);
+        // SEXO
+        gbc.gridy++;
+        formPanel.add(new JLabel("Sexo *"), gbc);
 
-	    gbc.gridy++;
-	    JPasswordField txtConfirmPassword = new JPasswordField(20);
-	    formPanel.add(txtConfirmPassword, gbc);
+        gbc.gridy++;
+        sexPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
+        sexPanel.setBackground(Color.WHITE);
 
-	    // TERMINOS
-	    gbc.gridy++;
-	    JCheckBox chkTerms = new JCheckBox("Acepto Términos y Condiciones");
-	    chkTerms.setForeground(Color.BLUE);
-	    chkTerms.setCursor(new Cursor(Cursor.HAND_CURSOR));
-	    chkTerms.setBackground(Color.WHITE);
-	    formPanel.add(chkTerms, gbc);
+        JRadioButton rbMan = new JRadioButton("Hombre");
+        JRadioButton rbWomen = new JRadioButton("Mujer");
+        JRadioButton rbOther = new JRadioButton("Otro");
 
-	    // BOTON
-	    gbc.gridy++;
-	    gbc.anchor = GridBagConstraints.CENTER;
+        bgSex = new ButtonGroup();
+        bgSex.add(rbMan);
+        bgSex.add(rbWomen);
+        bgSex.add(rbOther);
 
-	    JButton btnRegister = new JButton("Registrar");
-	    btnRegister.setFocusPainted(false);
-	    btnRegister.setCursor(new Cursor(Cursor.HAND_CURSOR));
-	    btnRegister.setPreferredSize(new Dimension(150, 40));
+        sexPanel.add(rbMan);
+        sexPanel.add(rbWomen);
+        sexPanel.add(rbOther);
 
-	    formPanel.add(btnRegister, gbc);
+        formPanel.add(sexPanel, gbc);
 
-	    return formPanel;
-	}
-	
-	private JPanel createImagePanel() {
+        gbc.gridy++;
+        formPanel.add(lblErrorGender, gbc);
 
-		ImagePanel imagePanel = new ImagePanel("/img/welcome.png");
-	    imagePanel.setLayout(new BorderLayout());
-	    imagePanel.setPreferredSize(new Dimension(400, 0));
+        // CONTRASEÑA
+        gbc.gridy++;
+        formPanel.add(new JLabel("Contraseña *"), gbc);
 
-	    return imagePanel;
+        gbc.gridy++;
+        txtPassword = new JPasswordField(20);
+        formPanel.add(txtPassword, gbc);
+
+        gbc.gridy++;
+        formPanel.add(lblErrorPassword, gbc);
+
+        // CONFIRMAR
+        gbc.gridy++;
+        formPanel.add(new JLabel("Confirmar Contraseña *"), gbc);
+
+        gbc.gridy++;
+        txtConfirmPassword = new JPasswordField(20);
+        formPanel.add(txtConfirmPassword, gbc);
+
+        // TERMINOS
+        gbc.gridy++;
+        chkTerms = new JCheckBox("Acepto Términos y Condiciones");
+        chkTerms.setBackground(Color.WHITE);
+        formPanel.add(chkTerms, gbc);
+
+        gbc.gridy++;
+        formPanel.add(lblErrorTerms, gbc);
+
+        // BOTÓN
+        gbc.gridy++;
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        JButton btnRegister = new JButton("Registrar");
+        btnRegister.setPreferredSize(new Dimension(150, 40));
+        btnRegister.addActionListener(e -> validateForm());
+
+        formPanel.add(btnRegister, gbc);
+
+        return formPanel;
+    }
+
+    private JLabel createErrorLabel() {
+        JLabel label = new JLabel();
+        label.setFont(AppFont.small());
+        label.setForeground(Color.RED);
+        return label;
+    }
+
+    private JPanel createImagePanel() {
+        ImagePanel imagePanel = new ImagePanel("/img/welcome.png");
+        imagePanel.setLayout(new BorderLayout());
+        imagePanel.setPreferredSize(new Dimension(400, 0));
+        return imagePanel;
+    }
+
+    
+    
+    //VALIDACIONES 
+
+    private void validateForm() {
+        resetErrorLabels();
+        boolean valid = true;
+
+        if (!validateName()) 
+        	valid = false;
+        
+        if (!validateEmail()) 
+        	valid = false;
+        
+        if (!validateGender()) 
+        	valid = false;
+        
+        if (!validatePassword()) 
+        	valid = false;
+        
+        if (!validateTerms()) 
+        	valid = false;
+      
+        if (valid) {
+            JOptionPane.showMessageDialog(this, "Registro exitoso");
+        }
+    }
+
+    private void resetErrorLabels() {
+        lblErrorName.setText("");
+        lblErrorEmail.setText("");
+        lblErrorDate.setText("");
+        lblErrorGender.setText("");
+        lblErrorPassword.setText("");
+        lblErrorTerms.setText("");
+    }
+
+    private boolean validateName() {
+        if (txtName.getText().trim().isEmpty()) {
+            lblErrorName.setText("El nombre es obligatorio");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateEmail() {
+        String email = txtEmail.getText().trim();
+
+        if (email.isEmpty()) {
+            lblErrorEmail.setText("El correo es obligatorio");
+            return false;
+        }
+
+        if (!email.contains("@") || !email.contains(".")) {
+            lblErrorEmail.setText("Correo inválido");
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean validateGender() {
+        if (bgSex.getSelection() == null) {
+            lblErrorGender.setText("Seleccione una opción");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validatePassword() {
+        String pass = new String(txtPassword.getPassword());
+        String confirm = new String(txtConfirmPassword.getPassword());
+
+        if (pass.isEmpty() || confirm.isEmpty()) {
+            lblErrorPassword.setText("Complete ambos campos");
+            return false;
+        }
+
+        if (pass.length() < 8) {
+            lblErrorPassword.setText("Mínimo 8 caracteres");
+            return false;
+        }
+
+        if (!pass.equals(confirm)) {
+            lblErrorPassword.setText("Las contraseñas no coinciden");
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean validateTerms() {
+        if (!chkTerms.isSelected()) {
+            lblErrorTerms.setText("Debe aceptar los términos");
+            return false;
+        }
+        return true;
     }
 }
