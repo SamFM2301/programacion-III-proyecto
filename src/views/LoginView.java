@@ -115,6 +115,9 @@ public class LoginView extends JFrame {
             	showMessageLoginSuccesful();
                 resetErrorMsg();
                 resetFields();
+                
+                new MainView();
+                dispose();
             }
 
         });
@@ -126,6 +129,8 @@ public class LoginView extends JFrame {
         panelBotones.add(btnRegistrar);
 
         formPanel.add(panelBotones, gridConstraints);
+        
+        btnRegistrar.addActionListener(e -> handleRegistration());
 
         containerPanel.add(formPanel, BorderLayout.CENTER);
         mainPanel.add(containerPanel);
@@ -176,6 +181,11 @@ public class LoginView extends JFrame {
 			"Sesion iniciada.",
 			JOptionPane.INFORMATION_MESSAGE
     	);
+    }
+    
+    public void handleRegistration() {
+    	new RegisterForm();
+    	dispose();
     }
 }
 

@@ -243,6 +243,9 @@ public class RegisterForm extends JFrame {
       
         if (valid) {
             JOptionPane.showMessageDialog(this, "Registro exitoso");
+            
+            new LoginView();
+            dispose();
         }
     }
 
