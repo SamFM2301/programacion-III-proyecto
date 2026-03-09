@@ -5,6 +5,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.time.LocalDate;
 
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import img.ImagePanel;
 import utils.AppFont;
 import components.ErrorLabel;
@@ -200,6 +203,8 @@ public class RegisterForm extends JFrame {
         btnRegister.addActionListener(e -> validateForm());
 
         formPanel.add(btnRegister, gbc);
+        
+        assignListeners();
 
         return formPanel;
     }
@@ -217,8 +222,6 @@ public class RegisterForm extends JFrame {
         imagePanel.setPreferredSize(new Dimension(400, 0));
         return imagePanel;
     }
-
-    
     
     //VALIDACIONES 
 
@@ -263,6 +266,8 @@ public class RegisterForm extends JFrame {
             lblErrorName.setText("El nombre es obligatorio");
             return false;
         }
+        
+        lblErrorName.setText("");
         return true;
     }
 
@@ -279,6 +284,7 @@ public class RegisterForm extends JFrame {
             return false;
         }
 
+        lblErrorEmail.setText("");
         return true;
     }
 
@@ -287,6 +293,8 @@ public class RegisterForm extends JFrame {
             lblErrorGender.setText("Seleccione una opción");
             return false;
         }
+        
+        lblErrorGender.setText("");
         return true;
     }
 
@@ -309,9 +317,70 @@ public class RegisterForm extends JFrame {
             return false;
         }
 
+        lblErrorPassword.setText("");
         return true;
     }
 
+    
+    private void assignListeners() {
+
+        // Validacion en tiempo real para nombre
+        txtName.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) { 
+            	validateName(); 
+            }
+            public void removeUpdate(DocumentEvent e) { 
+            	validateName(); 
+            }
+            public void changedUpdate(DocumentEvent e) {
+            	validateName(); 
+            }
+        });
+
+        // Validacion en tiempo real para email
+        txtEmail.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) { 
+            	validateEmail(); 
+            }
+            public void removeUpdate(DocumentEvent e) { 
+            	validateEmail(); 
+            }
+            public void changedUpdate(DocumentEvent e) { 
+            	validateEmail(); 
+        	}
+        });
+
+        // Validacion para contraseña
+        txtPassword.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) { 
+            	validatePassword(); 
+        	}
+            public void removeUpdate(DocumentEvent e) { 
+            	validatePassword(); 
+        	}
+            public void changedUpdate(DocumentEvent e) { 
+            	validatePassword(); 
+        	}
+        });
+
+        // Validacion para confirmar contraseña
+        txtConfirmPassword.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) { 
+            	validatePassword(); 
+        	}
+            public void removeUpdate(DocumentEvent e) { 
+            	validatePassword(); 
+        	}
+            public void changedUpdate(DocumentEvent e) { 
+            	validatePassword(); 
+        	}
+        });
+
+        // Validacion de terminos
+        chkTerms.addActionListener(e -> validateTerms());
+
+    }
+        
     private boolean validateTerms() {
         if (!chkTerms.isSelected()) {
             lblErrorTerms.setText("Debe aceptar los términos");

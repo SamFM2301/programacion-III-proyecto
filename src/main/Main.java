@@ -46,8 +46,8 @@ public class Main {
 		UIManager.put("TextField.font", AppFont.normal());
 		UIManager.put("Button.font", AppFont.normal());
 		
-		LoginView loginWindow = new LoginView(); 
-		//RegisterForm registerWindow = new RegisterForm();
+		//LoginView loginWindow = new LoginView(); 
+		RegisterForm registerWindow = new RegisterForm();
 		
 	}
 
