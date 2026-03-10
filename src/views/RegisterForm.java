@@ -1,6 +1,9 @@
 package views;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.time.LocalDate;
@@ -30,6 +33,8 @@ public class RegisterForm extends JFrame {
     private JLabel lblErrorPassword;
     private JLabel lblErrorTerms;
 
+    private Color defualtButtonColor;
+    
     public RegisterForm() {
         initFrame();
         initComponents();
@@ -201,6 +206,22 @@ public class RegisterForm extends JFrame {
         JButton btnRegister = new JButton("Registrar");
         btnRegister.setPreferredSize(new Dimension(150, 40));
         btnRegister.addActionListener(e -> validateForm());
+        
+        btnRegister.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        defualtButtonColor = btnRegister.getBackground();
+
+        btnRegister.addMouseListener(new MouseAdapter() {
+        	public void mouseEntered(MouseEvent e) {
+        		btnRegister.setBackground(new Color(150, 150, 150));
+			}
+			
+			public void mouseExited(MouseEvent e) {
+				btnRegister.setBackground(defualtButtonColor);
+			}
+        	
+        });
+        
 
         formPanel.add(btnRegister, gbc);
         

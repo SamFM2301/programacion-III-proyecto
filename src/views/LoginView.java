@@ -7,6 +7,9 @@ import img.ImagePanel;
 import utils.AppFont;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class LoginView extends JFrame {
 
@@ -14,6 +17,8 @@ public class LoginView extends JFrame {
 	private JLabel lblErrorPassword;
     private JTextField txtUsuario;
     private JPasswordField txtPassword;
+    
+    private Color defualtButtonColor;
 
     public LoginView() {
         setTitle("Login");
@@ -106,8 +111,23 @@ public class LoginView extends JFrame {
         JPanel panelBotones = new JPanel();
         panelBotones.setOpaque(false);
 
+
         RoundButton btnIniciar = new RoundButton("Iniciar");
         btnIniciar.setPreferredSize(new Dimension(120, 40));
+        btnIniciar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        defualtButtonColor = btnIniciar.getBackground();
+
+        btnIniciar.addMouseListener(new MouseAdapter() {
+        	public void mouseEntered(MouseEvent e) {
+        		btnIniciar.setBackground(new Color(150, 150, 150));
+			}
+			
+			public void mouseExited(MouseEvent e) {
+				btnIniciar.setBackground(defualtButtonColor);
+			}
+        	
+        });
         
         btnIniciar.addActionListener(e -> {
 
@@ -124,11 +144,23 @@ public class LoginView extends JFrame {
 
         RoundButton btnRegistrar = new RoundButton("Registrar");
         btnRegistrar.setPreferredSize(new Dimension(120, 40));
-
+        btnRegistrar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
         panelBotones.add(btnIniciar);
         panelBotones.add(btnRegistrar);
 
         formPanel.add(panelBotones, gridConstraints);
+        
+        btnRegistrar.addMouseListener(new MouseAdapter() {
+        	public void mouseEntered(MouseEvent e) {
+        		btnRegistrar.setBackground(new Color(150, 150, 150));
+			}
+			
+			public void mouseExited(MouseEvent e) {
+				btnRegistrar.setBackground(defualtButtonColor);
+			}
+        	
+        });
         
         btnRegistrar.addActionListener(e -> handleRegistration());
 
