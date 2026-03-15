@@ -8,11 +8,9 @@ import img.ImagePanel;
 import utils.*;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 
-public class LoginView extends JFrame {
+public class LoginView extends JFrame implements KeyListener, FocusListener, WindowListener {
 
 	private RoundedTextField txtEmail;
 	private RoundedPasswordField txtPassword;
@@ -43,7 +41,7 @@ public class LoginView extends JFrame {
 		mainPanel.setBackground(AppColors.BACKGROUND);
 		mainPanel.setBorder(new EmptyBorder(30, 30, 30, 30));
 		
-		mainPanel.add(createImagePanel("src/img/background.jpg"));
+		mainPanel.add(createImagePanel("src/img/welcome.png"));
 		mainPanel.add(createLoginPanel());
 		
 		add(mainPanel);
@@ -89,6 +87,13 @@ public class LoginView extends JFrame {
 		JLabel lblPassword = new JLabel("Contraseña: *");
 		txtPassword = new RoundedPasswordField(8);
 		lblErrorPassword = new JLabel(" ");
+		
+		// LISTENER
+		txtEmail.addKeyListener(this);
+		txtPassword.addKeyListener(this);
+
+		txtEmail.addFocusListener(this);
+		txtPassword.addFocusListener(this);
 		
 		// LOGIN BUTTON
 		JButton btnLoginIn = createButton(
@@ -262,6 +267,79 @@ public class LoginView extends JFrame {
 			JOptionPane.INFORMATION_MESSAGE
     	);
     }
+    
+    @Override
+	public void keyPressed(KeyEvent e) {
+
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			buttonValidate();
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		
+	}
+	
+	
+	@Override
+	public void focusGained(FocusEvent e) {
+
+		if (e.getSource() == txtEmail) {
+			lblErrorEmail.setText(" ");
+		}
+
+		if (e.getSource() == txtPassword) {
+			lblErrorPassword.setText(" ");
+		}
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		
+	}
+	
+	@Override
+	public void windowOpened(WindowEvent e) {
+		System.out.println("Ventana abierta");
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		System.out.println("Cerrando ventana");
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		
+	}
+
+    
     
     public void handleRegistration() {
     	new RegisterForm();
