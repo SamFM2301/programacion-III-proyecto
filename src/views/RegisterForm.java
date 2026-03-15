@@ -12,8 +12,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import img.ImagePanel;
-import utils.AppFont;
-import components.ErrorLabel;
+import utils.AppFonts;
 
 public class RegisterForm extends JFrame {
 
@@ -26,7 +25,6 @@ public class RegisterForm extends JFrame {
     private JCheckBox chkTerms;
 
     private ButtonGroup bgSex;
-    private ErrorLabel lblErrorName;
     private JLabel lblErrorEmail;
     private JLabel lblErrorDate;
     private JLabel lblErrorGender;
@@ -75,7 +73,6 @@ public class RegisterForm extends JFrame {
         
 
         // Inicializar labels error
-        lblErrorName = new ErrorLabel();
         lblErrorEmail = createErrorLabel();
         lblErrorDate = createErrorLabel();
         lblErrorGender = createErrorLabel();
@@ -84,7 +81,6 @@ public class RegisterForm extends JFrame {
 
         // TITULO
         JLabel lblTitle = new JLabel("Registro de Usuario");
-        lblTitle.setFont(AppFont.title());
         lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 
         gbc.gridx = 0;
@@ -102,7 +98,6 @@ public class RegisterForm extends JFrame {
         formPanel.add(txtName, gbc);
 
         gbc.gridy++;
-        formPanel.add(lblErrorName, gbc);
 
         // EMAIL
         gbc.gridy++;
@@ -232,7 +227,6 @@ public class RegisterForm extends JFrame {
 
     private JLabel createErrorLabel() {
         JLabel label = new JLabel();
-        label.setFont(AppFont.small());
         label.setForeground(Color.RED);
         return label;
     }
@@ -274,7 +268,6 @@ public class RegisterForm extends JFrame {
     }
 
     private void resetErrorLabels() {
-        lblErrorName.setText("");
         lblErrorEmail.setText("");
         lblErrorDate.setText("");
         lblErrorGender.setText("");
@@ -284,11 +277,9 @@ public class RegisterForm extends JFrame {
 
     private boolean validateName() {
         if (txtName.getText().trim().isEmpty()) {
-            lblErrorName.setText("El nombre es obligatorio");
             return false;
         }
         
-        lblErrorName.setText("");
         return true;
     }
 
