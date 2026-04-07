@@ -1,5 +1,8 @@
 package views;
 
+import exceptions.InvalidUserException;
+import exceptions.InvalidPasswordException;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
@@ -214,39 +217,42 @@ public class LoginView extends JFrame implements KeyListener, FocusListener, Win
 	}
 	
 	private void buttonValidate() {
-		if (isValidFields()) {
-			showMessageLoginSuccesful();
-            resetErrorMsg();
-            resetFields();
-            
-            new MainView();
-            dispose();
-		}
+	    try {
+	    	isValidFields();
+	        
+	        showMessageLoginSuccesful();
+	        resetErrorMsg();
+	        resetFields();
+
+	        new MainView();
+	        dispose();
+
+	    } catch (InvalidUserException ex) {
+	        lblErrorEmail.setText(ex.getMessage());
+	    } catch (InvalidPasswordException ex) {
+	        lblErrorPassword.setText(ex.getMessage());
+	    }
 	}
 	
-	private boolean isValidFields() {
-		boolean isValid = true;
-		
-		String textEmail = txtEmail.getText().trim();
-		String textPassword = new String(txtPassword.getPassword()).trim();
-		
-		if (textEmail.isEmpty()) {
-    		lblErrorEmail.setText("El campo correo es obligatorio");
-    		lblErrorEmail.setVisible(true);
-    		isValid = false;
-    	} else {
-    		lblErrorEmail.setText(" ");
-    	}
-    	
-    	if (textPassword.isEmpty()) {
-    		lblErrorPassword.setText("El campo contraseña es obligatorio");
-    		lblErrorPassword.setVisible(true);
-    		isValid = false;
-    	} else {
-    		lblErrorPassword.setText(" ");
-    	}
+	private void isValidFields() throws InvalidUserException, InvalidPasswordException {
+	    String textEmail = txtEmail.getText().trim();
+	    String textPassword = new String(txtPassword.getPassword()).trim();
 
-		return isValid;
+	    if (textEmail.isEmpty()) {
+	        throw new InvalidUserException("El correo es obligatorio");
+	    }
+
+	    if (!textEmail.equals("jcamacho@alu.uabcs.mx")) {
+	        throw new InvalidUserException("Correo no válido");
+	    }
+
+	    if (textPassword.isEmpty()) {
+	        throw new InvalidPasswordException("La contraseña es obligatoria");
+	    }
+
+	    if (textPassword.length() < 6) {
+	        throw new InvalidPasswordException("Mínimo 6 caracteres");
+	    }
 	}
 	
 	public void resetErrorMsg() {
@@ -270,22 +276,15 @@ public class LoginView extends JFrame implements KeyListener, FocusListener, Win
     
     @Override
 	public void keyPressed(KeyEvent e) {
-
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			buttonValidate();
 		}
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
-		
-	}
-
+	public void keyReleased(KeyEvent e) {}
 	@Override
-	public void keyTyped(KeyEvent e) {
-		
-	}
-	
+	public void keyTyped(KeyEvent e) {}
 	
 	@Override
 	public void focusGained(FocusEvent e) {
@@ -300,9 +299,7 @@ public class LoginView extends JFrame implements KeyListener, FocusListener, Win
 	}
 
 	@Override
-	public void focusLost(FocusEvent e) {
-		
-	}
+	public void focusLost(FocusEvent e) {}
 	
 	@Override
 	public void windowOpened(WindowEvent e) {
@@ -315,31 +312,19 @@ public class LoginView extends JFrame implements KeyListener, FocusListener, Win
 	}
 
 	@Override
-	public void windowClosed(WindowEvent e) {
-		
-	}
+	public void windowClosed(WindowEvent e) {}
 
 	@Override
-	public void windowIconified(WindowEvent e) {
-		
-	}
+	public void windowIconified(WindowEvent e) {}
 
 	@Override
-	public void windowDeiconified(WindowEvent e) {
-		
-	}
+	public void windowDeiconified(WindowEvent e) {}
 
 	@Override
-	public void windowActivated(WindowEvent e) {
-		
-	}
+	public void windowActivated(WindowEvent e) {}
 
 	@Override
-	public void windowDeactivated(WindowEvent e) {
-		
-	}
-
-    
+	public void windowDeactivated(WindowEvent e) {}
     
     public void handleRegistration() {
     	new RegisterForm();
