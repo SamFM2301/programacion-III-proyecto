@@ -1,403 +1,587 @@
 package views;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.time.LocalDate;
 
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
-import img.ImagePanel;
-import utils.AppFonts;
+import components.*;
+import models.UserModel;
+import utils.*;
 
 public class RegisterForm extends JFrame {
 
-    private JTextField txtName;
-    private JTextField txtEmail;
-    private JPanel datePanel;
-    private JPanel sexPanel;
-    private JPasswordField txtPassword;
-    private JPasswordField txtConfirmPassword;
-    private JCheckBox chkTerms;
-
+    // Componentes de la vista
+    private RoundedTextField txtName;
+    private RoundedTextField txtEmail;
+    private RoundedPasswordField txtPassword;
+    private RoundedPasswordField txtConfirmPassword;
+    
+    private JComboBox<Integer> cbxDay;
+    private JComboBox<Integer> cbxMonth;
+    private JComboBox<Integer> cbxYear;
+    
+    private JRadioButton rbMan;
+    private JRadioButton rbWomen;
+    private JRadioButton rbOther;
     private ButtonGroup bgSex;
+    
+    private JCheckBox chkTerms;
+    
+    
+    private JLabel lblErrorName;
     private JLabel lblErrorEmail;
     private JLabel lblErrorDate;
     private JLabel lblErrorGender;
     private JLabel lblErrorPassword;
     private JLabel lblErrorTerms;
-
-    private Color defualtButtonColor;
+    
+    // Listeners para MVC
+    private ActionListener registerListener;
+    private ActionListener backToLoginListener;
     
     public RegisterForm() {
         initFrame();
         initComponents();
     }
-
+    
     private void initFrame() {
         setTitle("Registro de Usuario");
-
+        
         Toolkit tk = Toolkit.getDefaultToolkit();
-        Image icono = tk.getImage("src/img/iniciosesion.png");
-        setIconImage(icono);
-
+        Image icon = tk.getImage("src/img/iniciosesion.png");
+        setIconImage(icon);
+        
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(1000, 750));
+        setMinimumSize(new Dimension(1000, 700));
+        setResizable(true);
         setLocationRelativeTo(null);
     }
-
+    
     private void initComponents() {
         JPanel mainPanel = new JPanel(new GridLayout(1, 2));
-        mainPanel.setBackground(new Color(57, 94, 102));
-        mainPanel.setBorder(new EmptyBorder(50, 50, 50, 50));
-
-        mainPanel.add(createFormPanel());
-        mainPanel.add(createImagePanel());
-
+        mainPanel.setBackground(AppColors.BACKGROUND);
+        mainPanel.setBorder(new EmptyBorder(30, 30, 30, 30));
+        
+        mainPanel.add(createImagePanel("src/img/welcome.png"));
+        mainPanel.add(createRegisterPanel());
+        
         add(mainPanel);
         setVisible(true);
     }
-
-    private JPanel createFormPanel() {
-        JPanel formPanel = new JPanel();
-        formPanel.setBackground(Color.WHITE);
-        formPanel.setLayout(new GridBagLayout());
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(4, 10, 4, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+    
+    private JPanel createImagePanel(String imagePath) {
+        ImageIcon icon = new ImageIcon(imagePath);
+        Image image = icon.getImage();
         
-
-        // Inicializar labels error
-        lblErrorEmail = createErrorLabel();
-        lblErrorDate = createErrorLabel();
-        lblErrorGender = createErrorLabel();
-        lblErrorPassword = createErrorLabel();
-        lblErrorTerms = createErrorLabel();
-
-        // TITULO
-        JLabel lblTitle = new JLabel("Registro de Usuario");
-        lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
-
+        JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
+        
+        panel.setPreferredSize(new Dimension(450, 550));
+        return panel;
+    }
+    
+    private JPanel createRegisterPanel() {
+        
+        JPanel registerPanel = new JPanel();
+        registerPanel.setLayout(new BoxLayout(registerPanel, BoxLayout.Y_AXIS));
+        registerPanel.setBackground(AppColors.PANEL);
+        registerPanel.setBorder(new EmptyBorder(15, 35, 15, 35)); 
+        
+        // TÍTULO
+        JLabel lblTitle = new JLabel("Registrarse");
+        lblTitle.setFont(AppFonts.title());
+        lblTitle.setForeground(AppColors.TEXT_LIGHT);
+        lblTitle.setAlignmentX(LEFT_ALIGNMENT);
+        
+        registerPanel.add(lblTitle);
+        registerPanel.add(Box.createVerticalStrut(10));
+        
+        
+        initializeComponents();
+        
+        
+        initializeErrorLabels();
+        
+        
+        registerPanel.add(createFieldPanel("Nombre completo: *", txtName, lblErrorName));
+        registerPanel.add(Box.createVerticalStrut(5));
+        
+        registerPanel.add(createFieldPanel("Correo electrónico: *", txtEmail, lblErrorEmail));
+        registerPanel.add(Box.createVerticalStrut(5));
+        
+        registerPanel.add(createDatePanel());
+        registerPanel.add(Box.createVerticalStrut(5)); 
+        
+        registerPanel.add(createGenderPanel());
+        registerPanel.add(Box.createVerticalStrut(5));
+        
+        registerPanel.add(createFieldPanel("Contraseña: *", txtPassword, lblErrorPassword));
+        registerPanel.add(Box.createVerticalStrut(5)); 
+        
+        registerPanel.add(createFieldPanel("Confirmar contraseña: *", txtConfirmPassword, new JLabel(" ")));
+        registerPanel.add(Box.createVerticalStrut(5)); 
+        
+        registerPanel.add(createTermsPanel());
+        registerPanel.add(Box.createVerticalStrut(5)); 
+        
+        registerPanel.add(createButtonsPanel());
+        
+      
+        JPanel wrapper = new JPanel(new GridBagLayout());
+        wrapper.setBackground(AppColors.PANEL);
+        
+        GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        formPanel.add(lblTitle, gbc);
-        gbc.gridwidth = 1;
-
-        // NOMBRE
-        gbc.gridy++;
-        formPanel.add(new JLabel("Nombre *"), gbc);
-
-        gbc.gridy++;
-        txtName = new JTextField(20);
-        formPanel.add(txtName, gbc);
-
-        gbc.gridy++;
-
-        // EMAIL
-        gbc.gridy++;
-        formPanel.add(new JLabel("Correo *"), gbc);
-
-        gbc.gridy++;
-        txtEmail = new JTextField(20);
-        formPanel.add(txtEmail, gbc);
-
-        gbc.gridy++;
-        formPanel.add(lblErrorEmail, gbc);
-
-        // FECHA
-        gbc.gridy++;
-        formPanel.add(new JLabel("Fecha Nacimiento *"), gbc);
-
-        gbc.gridy++;
-        datePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
-        datePanel.setBackground(Color.WHITE);
-
-        JComboBox<Integer> cbxDay = new JComboBox<>();
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = GridBagConstraints.WEST;
+        
+        wrapper.add(registerPanel, gbc);
+        
+        return wrapper;
+    }
+    
+    private void initializeComponents() {
+        txtName = new RoundedTextField(8);
+        txtEmail = new RoundedTextField(8);
+        txtPassword = new RoundedPasswordField(8);
+        txtConfirmPassword = new RoundedPasswordField(8);
+        
+        
+        cbxDay = new JComboBox<>();
         for (int i = 1; i <= 31; i++) cbxDay.addItem(i);
-
-        JComboBox<Integer> cbxMonth = new JComboBox<>();
+        
+        cbxMonth = new JComboBox<>();
         for (int i = 1; i <= 12; i++) cbxMonth.addItem(i);
-
-        JComboBox<Integer> cbxYear = new JComboBox<>();
+        
+        cbxYear = new JComboBox<>();
         int currentYear = LocalDate.now().getYear();
         for (int i = 0; i < 100; i++) cbxYear.addItem(currentYear - i);
-
-        datePanel.add(new JLabel("Día:"));
-        datePanel.add(cbxDay);
-        datePanel.add(new JLabel("Mes:"));
-        datePanel.add(cbxMonth);
-        datePanel.add(new JLabel("Año:"));
-        datePanel.add(cbxYear);
-
-        formPanel.add(datePanel, gbc);
-
-        gbc.gridy++;
-        formPanel.add(lblErrorDate, gbc);
-
-        // SEXO
-        gbc.gridy++;
-        formPanel.add(new JLabel("Sexo *"), gbc);
-
-        gbc.gridy++;
-        sexPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
-        sexPanel.setBackground(Color.WHITE);
-
-        JRadioButton rbMan = new JRadioButton("Hombre");
-        JRadioButton rbWomen = new JRadioButton("Mujer");
-        JRadioButton rbOther = new JRadioButton("Otro");
-
+        
+        // Radio buttons
+        rbMan = new JRadioButton("Hombre");
+        rbWomen = new JRadioButton("Mujer");
+        rbOther = new JRadioButton("Otro");
+        
         bgSex = new ButtonGroup();
         bgSex.add(rbMan);
         bgSex.add(rbWomen);
         bgSex.add(rbOther);
-
-        sexPanel.add(rbMan);
-        sexPanel.add(rbWomen);
-        sexPanel.add(rbOther);
-
-        formPanel.add(sexPanel, gbc);
-
-        gbc.gridy++;
-        formPanel.add(lblErrorGender, gbc);
-
-        // CONTRASEÑA
-        gbc.gridy++;
-        formPanel.add(new JLabel("Contraseña *"), gbc);
-
-        gbc.gridy++;
-        txtPassword = new JPasswordField(20);
-        formPanel.add(txtPassword, gbc);
-
-        gbc.gridy++;
-        formPanel.add(lblErrorPassword, gbc);
-
-        // CONFIRMAR
-        gbc.gridy++;
-        formPanel.add(new JLabel("Confirmar Contraseña *"), gbc);
-
-        gbc.gridy++;
-        txtConfirmPassword = new JPasswordField(20);
-        formPanel.add(txtConfirmPassword, gbc);
-
-        // TERMINOS
-        gbc.gridy++;
-        chkTerms = new JCheckBox("Acepto Términos y Condiciones");
-        chkTerms.setBackground(Color.WHITE);
-        formPanel.add(chkTerms, gbc);
-
-        gbc.gridy++;
-        formPanel.add(lblErrorTerms, gbc);
-
-        // BOTÓN
-        gbc.gridy++;
-        gbc.anchor = GridBagConstraints.CENTER;
-
-        JButton btnRegister = new JButton("Registrar");
-        btnRegister.setPreferredSize(new Dimension(150, 40));
-        btnRegister.addActionListener(e -> validateForm());
         
-        btnRegister.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
-        defualtButtonColor = btnRegister.getBackground();
-
-        btnRegister.addMouseListener(new MouseAdapter() {
-        	public void mouseEntered(MouseEvent e) {
-        		btnRegister.setBackground(new Color(150, 150, 150));
-			}
-			
-			public void mouseExited(MouseEvent e) {
-				btnRegister.setBackground(defualtButtonColor);
-			}
-        	
-        });
-        
-
-        formPanel.add(btnRegister, gbc);
-        
-        assignListeners();
-
-        return formPanel;
-    }
-
-    private JLabel createErrorLabel() {
-        JLabel label = new JLabel();
-        label.setForeground(Color.RED);
-        return label;
-    }
-
-    private JPanel createImagePanel() {
-        ImagePanel imagePanel = new ImagePanel("/img/welcome.png");
-        imagePanel.setLayout(new BorderLayout());
-        imagePanel.setPreferredSize(new Dimension(400, 0));
-        return imagePanel;
+        chkTerms = new JCheckBox("Acepto los Términos y Condiciones");
+        chkTerms.setOpaque(false);
+        chkTerms.setForeground(AppColors.TEXT_LIGHT);
+        chkTerms.setFont(AppFonts.small());
+        chkTerms.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
     
-    //VALIDACIONES 
-
-    private void validateForm() {
+    private void initializeErrorLabels() {
+        lblErrorName = new JLabel(" ");
+        lblErrorEmail = new JLabel(" ");
+        lblErrorDate = new JLabel(" ");
+        lblErrorGender = new JLabel(" ");
+        lblErrorPassword = new JLabel(" ");
+        lblErrorTerms = new JLabel(" ");
+    }
+    
+    private JPanel createFieldPanel(String labelText, JComponent field, JLabel errorLabel) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setOpaque(false);
+        panel.setAlignmentX(LEFT_ALIGNMENT);
+        
+        JLabel label = new JLabel(labelText);
+        label.setFont(AppFonts.bold(12));
+        label.setForeground(AppColors.TEXT_LIGHT);
+        label.setAlignmentX(LEFT_ALIGNMENT);
+        
+        field.setBackground(AppColors.FIELDS);
+        field.setForeground(AppColors.TEXT_LIGHT);
+        field.setFont(AppFonts.regular(13));
+        field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 32)); 
+        field.setAlignmentX(LEFT_ALIGNMENT);
+        
+        errorLabel.setFont(AppFonts.small());
+        errorLabel.setForeground(Color.RED);
+        errorLabel.setAlignmentX(LEFT_ALIGNMENT);
+        
+        panel.add(label);
+        panel.add(Box.createVerticalStrut(2)); 
+        panel.add(field);
+        panel.add(Box.createVerticalStrut(1)); 
+        panel.add(errorLabel);
+        
+        return panel;
+    }
+    
+    private JPanel createDatePanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setOpaque(false);
+        panel.setAlignmentX(LEFT_ALIGNMENT);
+        
+        JLabel label = new JLabel("Fecha de nacimiento: *");
+        label.setFont(AppFonts.bold(12));
+        label.setForeground(AppColors.TEXT_LIGHT);
+        label.setAlignmentX(LEFT_ALIGNMENT);
+        
+        JPanel comboPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        comboPanel.setOpaque(false);
+        comboPanel.setAlignmentX(LEFT_ALIGNMENT);
+        
+        styleComboBox(cbxDay);
+        styleComboBox(cbxMonth);
+        styleComboBox(cbxYear);
+        
+        JLabel lblDay = new JLabel("Día:");
+        lblDay.setForeground(AppColors.TEXT_LIGHT);
+        lblDay.setFont(AppFonts.small());
+        
+        JLabel lblMonth = new JLabel("Mes:");
+        lblMonth.setForeground(AppColors.TEXT_LIGHT);
+        lblMonth.setFont(AppFonts.small());
+        
+        JLabel lblYear = new JLabel("Año:");
+        lblYear.setForeground(AppColors.TEXT_LIGHT);
+        lblYear.setFont(AppFonts.small());
+        
+        comboPanel.add(lblDay);
+        comboPanel.add(cbxDay);
+        comboPanel.add(Box.createHorizontalStrut(5));
+        comboPanel.add(lblMonth);
+        comboPanel.add(cbxMonth);
+        comboPanel.add(Box.createHorizontalStrut(5));
+        comboPanel.add(lblYear);
+        comboPanel.add(cbxYear);
+        
+        lblErrorDate.setFont(AppFonts.small());
+        lblErrorDate.setForeground(Color.RED);
+        lblErrorDate.setAlignmentX(LEFT_ALIGNMENT);
+        
+        panel.add(label);
+        panel.add(Box.createVerticalStrut(2)); 
+        panel.add(comboPanel);
+        panel.add(Box.createVerticalStrut(1));
+        panel.add(lblErrorDate);
+        
+        return panel;
+    }
+    
+    private void styleComboBox(JComboBox<?> combo) {
+        combo.setBackground(AppColors.FIELDS);
+        combo.setForeground(AppColors.TEXT_LIGHT);
+        combo.setFont(AppFonts.regular(12));
+        combo.setPreferredSize(new Dimension(65, 28)); 
+        combo.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }
+    
+    private JPanel createGenderPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setOpaque(false);
+        panel.setAlignmentX(LEFT_ALIGNMENT);
+        
+        JLabel label = new JLabel("Sexo: *");
+        label.setFont(AppFonts.bold(12));
+        label.setForeground(AppColors.TEXT_LIGHT);
+        label.setAlignmentX(LEFT_ALIGNMENT);
+        
+        JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
+        radioPanel.setOpaque(false);
+        radioPanel.setAlignmentX(LEFT_ALIGNMENT);
+        
+        rbMan.setOpaque(false);
+        rbMan.setForeground(AppColors.TEXT_LIGHT);
+        rbMan.setFont(AppFonts.regular(12));
+        rbMan.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        rbWomen.setOpaque(false);
+        rbWomen.setForeground(AppColors.TEXT_LIGHT);
+        rbWomen.setFont(AppFonts.regular(12));
+        rbWomen.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        rbOther.setOpaque(false);
+        rbOther.setForeground(AppColors.TEXT_LIGHT);
+        rbOther.setFont(AppFonts.regular(12));
+        rbOther.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        radioPanel.add(rbMan);
+        radioPanel.add(rbWomen);
+        radioPanel.add(rbOther);
+        
+        lblErrorGender.setFont(AppFonts.small());
+        lblErrorGender.setForeground(Color.RED);
+        lblErrorGender.setAlignmentX(LEFT_ALIGNMENT);
+        
+        panel.add(label);
+        panel.add(Box.createVerticalStrut(2)); 
+        panel.add(radioPanel);
+        panel.add(Box.createVerticalStrut(1)); 
+        panel.add(lblErrorGender);
+        
+        return panel;
+    }
+    
+    private JPanel createTermsPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setOpaque(false);
+        panel.setAlignmentX(LEFT_ALIGNMENT);
+        
+        JPanel checkPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        checkPanel.setOpaque(false);
+        checkPanel.setAlignmentX(LEFT_ALIGNMENT);
+        checkPanel.add(chkTerms);
+        
+        lblErrorTerms.setFont(AppFonts.small());
+        lblErrorTerms.setForeground(Color.RED);
+        lblErrorTerms.setAlignmentX(LEFT_ALIGNMENT);
+        
+        panel.add(checkPanel);
+        panel.add(Box.createVerticalStrut(1)); 
+        panel.add(lblErrorTerms);
+        
+        return panel;
+    }
+    
+    private JPanel createButtonsPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setOpaque(false);
+        panel.setAlignmentX(LEFT_ALIGNMENT);
+        
+        
+        JButton btnRegister = createButton(
+            "Registrarse",
+            AppColors.YELLOW,
+            AppColors.TEXT_DARK,
+            13 
+        );
+        
+        btnRegister.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                btnRegister.setBackground(AppColors.YELLOW_HOVER);
+            }
+            public void mouseExited(MouseEvent e) {
+                btnRegister.setBackground(AppColors.YELLOW);
+            }
+        });
+        
+        btnRegister.addActionListener(e -> {
+            if (registerListener != null) {
+                registerListener.actionPerformed(e);
+            } else {
+                handleRegister();
+            }
+        });
+        
+        
+        JButton btnBack = createButton(
+            "¿Ya tienes cuenta? Inicia sesión",
+            AppColors.FIELDS,
+            AppColors.TEXT_LIGHT,
+            10 
+        );
+        
+        btnBack.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                btnBack.setBackground(AppColors.FIELDS_HOVER);
+            }
+            public void mouseExited(MouseEvent e) {
+                btnBack.setBackground(AppColors.FIELDS);
+            }
+        });
+        
+        btnBack.addActionListener(e -> {
+            if (backToLoginListener != null) {
+                backToLoginListener.actionPerformed(e);
+            } else {
+                new LoginView();
+                dispose();
+            }
+        });
+        
+        panel.add(btnRegister);
+        panel.add(Box.createVerticalStrut(8)); 
+        panel.add(btnBack);
+        
+        return panel;
+    }
+    
+    private JButton createButton(String text, Color background, Color textColor, int textSize) {
+        RoundedButton button = new RoundedButton(text, 8);
+        button.setFont(AppFonts.bold(textSize));
+        button.setBackground(background);
+        button.setForeground(textColor);
+        
+        
+        button.setMaximumSize(new Dimension(350, 35)); 
+        button.setPreferredSize(new Dimension(350, 35));
+        button.setMinimumSize(new Dimension(350, 35));
+        
+        button.setAlignmentX(CENTER_ALIGNMENT);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        return button;
+    }
+    
+    private void handleRegister() {
         resetErrorLabels();
-        boolean valid = true;
-
-        if (!validateName()) 
-        	valid = false;
+        boolean isValid = true;
         
-        if (!validateEmail()) 
-        	valid = false;
+        // Validaciones
+        if (txtName.getText().trim().isEmpty()) {
+            lblErrorName.setText("El nombre es obligatorio");
+            isValid = false;
+        }
         
-        if (!validateGender()) 
-        	valid = false;
+        String email = txtEmail.getText().trim();
+        if (email.isEmpty()) {
+            lblErrorEmail.setText("El correo es obligatorio");
+            isValid = false;
+        } else if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            lblErrorEmail.setText("Correo no válido");
+            isValid = false;
+        }
         
-        if (!validatePassword()) 
-        	valid = false;
+        if (bgSex.getSelection() == null) {
+            lblErrorGender.setText("Selecciona una opción");
+            isValid = false;
+        }
         
-        if (!validateTerms()) 
-        	valid = false;
-      
-        if (valid) {
-            JOptionPane.showMessageDialog(this, "Registro exitoso");
+        String pass = new String(txtPassword.getPassword());
+        String confirm = new String(txtConfirmPassword.getPassword());
+        
+        if (pass.isEmpty()) {
+            lblErrorPassword.setText("La contraseña es obligatoria");
+            isValid = false;
+        } else if (pass.length() < 6) {
+            lblErrorPassword.setText("Mínimo 6 caracteres");
+            isValid = false;
+        } else if (!pass.equals(confirm)) {
+            lblErrorPassword.setText("Las contraseñas no coinciden");
+            isValid = false;
+        }
+        
+        if (!chkTerms.isSelected()) {
+            lblErrorTerms.setText("Debes aceptar los términos");
+            isValid = false;
+        }
+        
+        if (isValid) {
+            JOptionPane.showMessageDialog(
+                this,
+                "¡Registro exitoso!",
+                "Registro completado",
+                JOptionPane.INFORMATION_MESSAGE
+            );
             
             new LoginView();
             dispose();
         }
     }
-
-    private void resetErrorLabels() {
-        lblErrorEmail.setText("");
-        lblErrorDate.setText("");
-        lblErrorGender.setText("");
-        lblErrorPassword.setText("");
-        lblErrorTerms.setText("");
-    }
-
-    private boolean validateName() {
-        if (txtName.getText().trim().isEmpty()) {
-            return false;
-        }
-        
-        return true;
-    }
-
-    private boolean validateEmail() {
-        String email = txtEmail.getText().trim();
-
-        if (email.isEmpty()) {
-            lblErrorEmail.setText("El correo es obligatorio");
-            return false;
-        }
-
-        if (!email.contains("@") || !email.contains(".")) {
-            lblErrorEmail.setText("Correo inválido");
-            return false;
-        }
-
-        lblErrorEmail.setText("");
-        return true;
-    }
-
-    private boolean validateGender() {
-        if (bgSex.getSelection() == null) {
-            lblErrorGender.setText("Seleccione una opción");
-            return false;
-        }
-        
-        lblErrorGender.setText("");
-        return true;
-    }
-
-    private boolean validatePassword() {
-        String pass = new String(txtPassword.getPassword());
-        String confirm = new String(txtConfirmPassword.getPassword());
-
-        if (pass.isEmpty() || confirm.isEmpty()) {
-            lblErrorPassword.setText("Complete ambos campos");
-            return false;
-        }
-
-        if (pass.length() < 8) {
-            lblErrorPassword.setText("Mínimo 8 caracteres");
-            return false;
-        }
-
-        if (!pass.equals(confirm)) {
-            lblErrorPassword.setText("Las contraseñas no coinciden");
-            return false;
-        }
-
-        lblErrorPassword.setText("");
-        return true;
-    }
-
     
-    private void assignListeners() {
-
-        // Validacion en tiempo real para nombre
-        txtName.getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) { 
-            	validateName(); 
-            }
-            public void removeUpdate(DocumentEvent e) { 
-            	validateName(); 
-            }
-            public void changedUpdate(DocumentEvent e) {
-            	validateName(); 
-            }
-        });
-
-        // Validacion en tiempo real para email
-        txtEmail.getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) { 
-            	validateEmail(); 
-            }
-            public void removeUpdate(DocumentEvent e) { 
-            	validateEmail(); 
-            }
-            public void changedUpdate(DocumentEvent e) { 
-            	validateEmail(); 
-        	}
-        });
-
-        // Validacion para contraseña
-        txtPassword.getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) { 
-            	validatePassword(); 
-        	}
-            public void removeUpdate(DocumentEvent e) { 
-            	validatePassword(); 
-        	}
-            public void changedUpdate(DocumentEvent e) { 
-            	validatePassword(); 
-        	}
-        });
-
-        // Validacion para confirmar contraseña
-        txtConfirmPassword.getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) { 
-            	validatePassword(); 
-        	}
-            public void removeUpdate(DocumentEvent e) { 
-            	validatePassword(); 
-        	}
-            public void changedUpdate(DocumentEvent e) { 
-            	validatePassword(); 
-        	}
-        });
-
-        // Validacion de terminos
-        chkTerms.addActionListener(e -> validateTerms());
-
+    private void resetErrorLabels() {
+        lblErrorName.setText(" ");
+        lblErrorEmail.setText(" ");
+        lblErrorDate.setText(" ");
+        lblErrorGender.setText(" ");
+        lblErrorPassword.setText(" ");
+        lblErrorTerms.setText(" ");
     }
-        
-    private boolean validateTerms() {
-        if (!chkTerms.isSelected()) {
-            lblErrorTerms.setText("Debe aceptar los términos");
-            return false;
-        }
-        return true;
+    
+    // 
+    
+    public void setRegisterListener(ActionListener listener) {
+        this.registerListener = listener;
     }
+    
+    public void setBackToLoginListener(ActionListener listener) {
+        this.backToLoginListener = listener;
+    }
+    
+    // Getters para el controlador
+    public String getName() {
+        return txtName.getText().trim();
+    }
+    
+    public String getEmail() {
+        return txtEmail.getText().trim();
+    }
+    
+    public String getPassword() {
+        return new String(txtPassword.getPassword());
+    }
+    
+    public String getConfirmPassword() {
+        return new String(txtConfirmPassword.getPassword());
+    }
+    
+    public String getSelectedGender() {
+        if (rbMan.isSelected()) return "Hombre";
+        if (rbWomen.isSelected()) return "Mujer";
+        if (rbOther.isSelected()) return "Otro";
+        return null;
+    }
+    
+    public String getBirthDate() {
+        return cbxDay.getSelectedItem() + "/" + 
+               cbxMonth.getSelectedItem() + "/" + 
+               cbxYear.getSelectedItem();
+    }
+    
+    public boolean isTermsAccepted() {
+        return chkTerms.isSelected();
+    }
+    
+    
+    public void setNameError(String message) {
+        lblErrorName.setText(message);
+    }
+    
+    public void setEmailError(String message) {
+        lblErrorEmail.setText(message);
+    }
+    
+    public void setDateError(String message) {
+        lblErrorDate.setText(message);
+    }
+    
+    public void setGenderError(String message) {
+        lblErrorGender.setText(message);
+    }
+    
+    public void setPasswordError(String message) {
+        lblErrorPassword.setText(message);
+    }
+    
+    public void setTermsError(String message) {
+        lblErrorTerms.setText(message);
+    }
+    
+    public void clearAllErrors() {
+        resetErrorLabels();
+    }
+    
+    public void showError(String message) {
+        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    public void showSuccessMessage(String message) {
+        JOptionPane.showMessageDialog(this, message, "Éxito", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+	public UserModel getUserData() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
