@@ -43,4 +43,32 @@ public class UserModel {
     public boolean isValidPassword() {
         return password != null && password.length() >= 6;
     }
+    
+    @Override
+    public String toString() {
+        return "Nombre: " + name +
+               "\nEmail: " + email +
+               "\nGenero: " + gender +
+               "\nFecha de nacimiento: " + birthDate;
+    }
+
+    public String toCsv() {
+        return name + "," +
+               email + "," +
+               password + "," +
+               gender + "," +
+               birthDate;
+    }
+
+    public static UserModel fromCsv(String userData) {
+        String[] data = userData.split(",");
+
+        String name = data[0];
+        String email = data[1];
+        String password = data[2];
+        String gender = data[3];
+        String birthDate = data[4];
+
+        return new UserModel(name, email, password, gender, birthDate);
+    }
 }

@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import components.*;
+import controllers.RegisterController;
 import utils.*;
 
 import java.awt.*;
@@ -31,7 +32,7 @@ public class LoginView extends JFrame implements KeyListener, FocusListener, Win
         setTitle("Login In");
         
         Toolkit tk = Toolkit.getDefaultToolkit(); 
-        Image icon = tk.getImage("src/img/iniciosesion.png"); 
+        Image icon = tk.getImage("src/assets/img/iniciosesion.png"); 
         setIconImage(icon);
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -45,7 +46,7 @@ public class LoginView extends JFrame implements KeyListener, FocusListener, Win
         mainPanel.setBackground(AppColors.BACKGROUND);
         mainPanel.setBorder(new EmptyBorder(30, 30, 30, 30));
         
-        mainPanel.add(createImagePanel("src/img/welcome.png"));
+        mainPanel.add(createImagePanel("src/assets/img/welcome.png"));
         mainPanel.add(createLoginPanel());
         
         add(mainPanel);
@@ -329,7 +330,8 @@ public class LoginView extends JFrame implements KeyListener, FocusListener, Win
     public void windowDeactivated(WindowEvent e) {}
     
     public void handleRegistration() {
-        new RegisterForm();
+        RegisterForm registerForm = new RegisterForm();
+        new RegisterController(registerForm);
         dispose();
     }
     
@@ -351,7 +353,7 @@ public class LoginView extends JFrame implements KeyListener, FocusListener, Win
     }
     
     public void showSuccessMessage(String message) {
-        JOptionPane.showMessageDialog(this, message, "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, "Exito", JOptionPane.INFORMATION_MESSAGE);
     }
     
     public void setEmailError(String message) {

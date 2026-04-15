@@ -50,7 +50,7 @@ public class RegisterForm extends JFrame {
         setTitle("Registro de Usuario");
         
         Toolkit tk = Toolkit.getDefaultToolkit();
-        Image icon = tk.getImage("src/img/iniciosesion.png");
+        Image icon = tk.getImage("src/assets/img/iniciosesion.png");
         setIconImage(icon);
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,7 +64,7 @@ public class RegisterForm extends JFrame {
         mainPanel.setBackground(AppColors.BACKGROUND);
         mainPanel.setBorder(new EmptyBorder(30, 30, 30, 30));
         
-        mainPanel.add(createImagePanel("src/img/welcome.png"));
+        mainPanel.add(createImagePanel("src/assets/img/welcome.png"));
         mainPanel.add(createRegisterPanel());
         
         add(mainPanel);
@@ -386,7 +386,7 @@ public class RegisterForm extends JFrame {
         
         
         JButton btnBack = createButton(
-            "¿Ya tienes cuenta? Inicia sesión",
+            "¿Ya tienes cuenta? Inicia sesion",
             AppColors.FIELDS,
             AppColors.TEXT_LIGHT,
             10 
@@ -449,7 +449,7 @@ public class RegisterForm extends JFrame {
             lblErrorEmail.setText("El correo es obligatorio");
             isValid = false;
         } else if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            lblErrorEmail.setText("Correo no válido");
+            lblErrorEmail.setText("Correo no valido");
             isValid = false;
         }
         
@@ -465,7 +465,7 @@ public class RegisterForm extends JFrame {
             lblErrorPassword.setText("La contraseña es obligatoria");
             isValid = false;
         } else if (pass.length() < 6) {
-            lblErrorPassword.setText("Mínimo 6 caracteres");
+            lblErrorPassword.setText("Minimo 6 caracteres");
             isValid = false;
         } else if (!pass.equals(confirm)) {
             lblErrorPassword.setText("Las contraseñas no coinciden");
@@ -473,7 +473,7 @@ public class RegisterForm extends JFrame {
         }
         
         if (!chkTerms.isSelected()) {
-            lblErrorTerms.setText("Debes aceptar los términos");
+            lblErrorTerms.setText("Debes aceptar los terminos");
             isValid = false;
         }
         
@@ -577,11 +577,16 @@ public class RegisterForm extends JFrame {
     }
     
     public void showSuccessMessage(String message) {
-        JOptionPane.showMessageDialog(this, message, "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, "Exito", JOptionPane.INFORMATION_MESSAGE);
     }
 
 	public UserModel getUserData() {
-		// TODO Auto-generated method stub
-		return null;
+		return new UserModel(
+	        getName(),
+	        getEmail(),
+	        getPassword(),
+	        getSelectedGender(),
+	        getBirthDate()
+	    );
 	}
 }
