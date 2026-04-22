@@ -11,7 +11,7 @@ import controllers.LoginController;
 import models.UserModel;
 import utils.*;
 
-public class RegisterForm extends JFrame {
+public class AddUserView extends JFrame {
 
     // Componentes de la vista
     private RoundedTextField txtName;
@@ -30,7 +30,6 @@ public class RegisterForm extends JFrame {
     
     private JCheckBox chkTerms;
     
-    
     private JLabel lblErrorName;
     private JLabel lblErrorEmail;
     private JLabel lblErrorDate;
@@ -42,7 +41,7 @@ public class RegisterForm extends JFrame {
     private ActionListener registerListener;
     private ActionListener backToLoginListener;
     
-    public RegisterForm() {
+    public AddUserView() {
         initFrame();
         initComponents();
     }
@@ -55,37 +54,20 @@ public class RegisterForm extends JFrame {
         setIconImage(icon);
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(1000, 700));
+        setMinimumSize(new Dimension(500, 700));
         setResizable(true);
         setLocationRelativeTo(null);
     }
     
     private void initComponents() {
-        JPanel mainPanel = new JPanel(new GridLayout(1, 2));
+        JPanel mainPanel = new JPanel(new GridLayout(1, 1));
         mainPanel.setBackground(AppColors.BACKGROUND);
         mainPanel.setBorder(new EmptyBorder(30, 30, 30, 30));
         
-        mainPanel.add(createImagePanel("src/assets/img/welcome.png"));
         mainPanel.add(createRegisterPanel());
         
         add(mainPanel);
         setVisible(true);
-    }
-    
-    private JPanel createImagePanel(String imagePath) {
-        ImageIcon icon = new ImageIcon(imagePath);
-        Image image = icon.getImage();
-        
-        JPanel panel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
-            }
-        };
-        
-        panel.setPreferredSize(new Dimension(450, 550));
-        return panel;
     }
     
     private JPanel createRegisterPanel() {
@@ -386,35 +368,7 @@ public class RegisterForm extends JFrame {
         });
         
         
-        JButton btnBack = createButton(
-            "¿Ya tienes cuenta? Inicia sesion",
-            AppColors.FIELDS,
-            AppColors.TEXT_LIGHT,
-            10 
-        );
-        
-        btnBack.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent e) {
-                btnBack.setBackground(AppColors.FIELDS_HOVER);
-            }
-            public void mouseExited(MouseEvent e) {
-                btnBack.setBackground(AppColors.FIELDS);
-            }
-        });
-        
-        btnBack.addActionListener(e -> {
-            if (backToLoginListener != null) {
-                backToLoginListener.actionPerformed(e);
-            } else {
-            	LoginView loginView = new LoginView();
-                new LoginController(loginView);
-                dispose();
-            }
-        });
-        
         panel.add(btnRegister);
-        panel.add(Box.createVerticalStrut(8)); 
-        panel.add(btnBack);
         
         return panel;
     }
@@ -487,7 +441,6 @@ public class RegisterForm extends JFrame {
                 JOptionPane.INFORMATION_MESSAGE
             );
             
-            new LoginView();
             dispose();
         }
     }
@@ -501,7 +454,25 @@ public class RegisterForm extends JFrame {
         lblErrorTerms.setText(" ");
     }
     
-    // 
+    public void prefillData(UserModel user) {
+        txtName.setText(user.getName());
+        txtEmail.setText(user.getEmail());
+        
+        switch (user.getGender()) {
+            case "Hombre" -> rbMan.setSelected(true);
+            case "Mujer"  -> rbWomen.setSelected(true);
+            case "Otro"   -> rbOther.setSelected(true);
+        }
+        
+        String[] parts = user.getBirthDate().split("/");
+        if (parts.length == 3) {
+            cbxDay.setSelectedItem(Integer.parseInt(parts[0]));
+            cbxMonth.setSelectedItem(Integer.parseInt(parts[1]));
+            cbxYear.setSelectedItem(Integer.parseInt(parts[2]));
+        }
+
+        chkTerms.setSelected(true);
+    }
     
     public void setRegisterListener(ActionListener listener) {
         this.registerListener = listener;

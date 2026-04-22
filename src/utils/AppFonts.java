@@ -10,11 +10,9 @@ public class AppFonts {
         try {
             InputStream is = AppFonts.class.getResourceAsStream("/assets/font/Roboto.ttf");
             baseFont = Font.createFont(Font.TRUETYPE_FONT, is);
-            System.out.println("Se cargo la fuente");
         } catch (Exception e) {
             System.out.println(e);
             baseFont = new Font("Arial", Font.PLAIN, 14);
-            System.out.println("NO se cargo la fuente");
         }
     }
 

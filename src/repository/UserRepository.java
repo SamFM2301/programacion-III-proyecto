@@ -21,7 +21,9 @@ public class UserRepository {
             writer.newLine();
         }
     }
+    
 
+    // LEER A LOS USUARIOS
     public List<UserModel> getUsers() throws IOException {
         List<UserModel> users = new ArrayList<>();
 
@@ -34,5 +36,31 @@ public class UserRepository {
         }
 
         return users;
+    }
+    
+    public void delete(String email) throws IOException {
+        List<UserModel> users = getUsers();
+        users.removeIf(u -> u.getEmail().equals(email));
+        rewriteFile(users);
+    }
+
+    public void update(String originalEmail, UserModel updatedUser) throws IOException {
+        List<UserModel> users = getUsers();
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getEmail().equals(originalEmail)) {
+                users.set(i, updatedUser);
+                break;
+            }
+        }
+        rewriteFile(users);
+    }
+
+    private void rewriteFile(List<UserModel> users) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(FILE, false), StandardCharsets.UTF_8))) {
+            for (UserModel user : users) {
+                writer.write(user.toCsv());
+                writer.newLine();
+            }
+        }
     }
 }

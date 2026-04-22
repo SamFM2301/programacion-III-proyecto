@@ -1,8 +1,11 @@
 package views;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.*;
@@ -15,6 +18,9 @@ public class MainView extends JFrame {
 
     private JTable table;
     private DefaultTableModel tableModel;
+    private JButton btnAdd;
+    private JButton btnModify;
+    private JButton btnDelete;
 
     public MainView() {
         initFrame();
@@ -34,25 +40,31 @@ public class MainView extends JFrame {
     }
 
     private void initComponents() {
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
+        setLayout(new BorderLayout());
+        getRootPane().setBorder(new EmptyBorder(15, 15, 15, 15));
+
+        JPanel buttonsOptionsPanel = new JPanel(new FlowLayout());
+        btnAdd = new JButton("Agregar");
+        btnModify = new JButton("Editar");
+        btnDelete = new JButton("Eliminar");
+        
+        buttonsOptionsPanel.add(btnAdd);
+        buttonsOptionsPanel.add(btnModify);
+        buttonsOptionsPanel.add(btnDelete);
 
         // Tabla
         String[] columns = {"Nombre", "Email", "Genero", "Fecha de nacimiento"};
         tableModel = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // tabla de solo lectura
+                return false;
             }
         };
-
         table = new JTable(tableModel);
         table.setFillsViewportHeight(true);
-
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setAlignmentX(LEFT_ALIGNMENT);
 
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton btnLogOut = new JButton("Cerrar Sesion");
         btnLogOut.addActionListener(e -> {
             int option = JOptionPane.showConfirmDialog(this, "Seguro que deseas cerrar sesion?");
@@ -61,15 +73,37 @@ public class MainView extends JFrame {
                 dispose();
             }
         });
+        bottomPanel.add(btnLogOut);
 
-        mainPanel.add(scrollPane);
-        mainPanel.add(Box.createVerticalStrut(10));
-        mainPanel.add(btnLogOut);
+        add(buttonsOptionsPanel, BorderLayout.NORTH);
+        add(scrollPane, BorderLayout.CENTER);
+        add(bottomPanel, BorderLayout.SOUTH);
 
-        add(mainPanel);
         setVisible(true);
     }
+    
+    public void addAddListener(ActionListener listener) {
+        btnAdd.addActionListener(listener);
+    }
+    public void addModifyListener(ActionListener listener) {
+        btnModify.addActionListener(listener);
+    }
+    public void addDeleteListener(ActionListener listener) {
+        btnDelete.addActionListener(listener);
+    }
 
+    public UserModel getSelectedUser() {
+        int row = table.getSelectedRow();
+        if (row == -1) return null;
+
+        String name     = (String) tableModel.getValueAt(row, 0);
+        String email    = (String) tableModel.getValueAt(row, 1);
+        String gender   = (String) tableModel.getValueAt(row, 2);
+        String birthDate = (String) tableModel.getValueAt(row, 3);
+
+        return new UserModel(name, email, null, gender, birthDate);
+    }
+    
     public void loadUsers(List<UserModel> users) {
         tableModel.setRowCount(0); // limpia la tabla
         for (UserModel user : users) {

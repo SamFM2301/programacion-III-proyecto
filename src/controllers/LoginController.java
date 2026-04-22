@@ -26,7 +26,9 @@ public class LoginController {
             validateCredentials(email, password);
             
             view.showSuccessMessage("Inicio de sesión exitoso");
-            new MainView();
+            
+            MainView mainView = new MainView();
+            new HomeController(mainView);
             view.dispose();
             
         } catch (InvalidUserException | InvalidPasswordException e) {

@@ -4,19 +4,21 @@ import java.io.IOException;
 
 import models.UserModel;
 import repository.UserRepository;
-import views.RegisterForm;
+import views.AddUserView;
 import views.LoginView;
 
-public class RegisterController {
-    private RegisterForm view;
+public class AddUserController {
+    private AddUserView view;
     private UserRepository userRepository;
+    private Runnable onSuccess;
 
-    public RegisterController(RegisterForm view) {
-        this.view = view;
-        this.userRepository = new UserRepository();
-        initController();
+    public AddUserController(AddUserView view, Runnable onSuccess) {
+    	this.view = view;
+    	this.onSuccess = onSuccess;
+    	this.userRepository = new UserRepository();
+    	initController();
     }
-
+    
     private void initController() {
         view.setRegisterListener(e -> registerUser());
     }
@@ -27,9 +29,8 @@ public class RegisterController {
         if (validateUserData(user)) {
             saveUser(user);
             view.showSuccessMessage("Registro exitoso");
-            LoginView loginView = new LoginView();
-            new LoginController(loginView);
             view.dispose();
+            onSuccess.run();
         }
     }
 
