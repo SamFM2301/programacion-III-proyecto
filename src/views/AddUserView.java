@@ -16,8 +16,6 @@ public class AddUserView extends JFrame {
     // Componentes de la vista
     private RoundedTextField txtName;
     private RoundedTextField txtEmail;
-    private RoundedPasswordField txtPassword;
-    private RoundedPasswordField txtConfirmPassword;
     
     private JComboBox<Integer> cbxDay;
     private JComboBox<Integer> cbxMonth;
@@ -34,7 +32,6 @@ public class AddUserView extends JFrame {
     private JLabel lblErrorEmail;
     private JLabel lblErrorDate;
     private JLabel lblErrorGender;
-    private JLabel lblErrorPassword;
     private JLabel lblErrorTerms;
     
     // Listeners para MVC
@@ -54,7 +51,7 @@ public class AddUserView extends JFrame {
         setIconImage(icon);
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(500, 700));
+        setMinimumSize(new Dimension(500, 500));
         setResizable(true);
         setLocationRelativeTo(null);
     }
@@ -67,7 +64,7 @@ public class AddUserView extends JFrame {
         mainPanel.add(createRegisterPanel());
         
         add(mainPanel);
-        setVisible(true);
+        //setVisible(true);
     }
     
     private JPanel createRegisterPanel() {
@@ -87,11 +84,9 @@ public class AddUserView extends JFrame {
         registerPanel.add(Box.createVerticalStrut(10));
         
         
-        initializeComponents();
-        
+        initializeComponents();     
         
         initializeErrorLabels();
-        
         
         registerPanel.add(createFieldPanel("Nombre completo: *", txtName, lblErrorName));
         registerPanel.add(Box.createVerticalStrut(5));
@@ -104,15 +99,6 @@ public class AddUserView extends JFrame {
         
         registerPanel.add(createGenderPanel());
         registerPanel.add(Box.createVerticalStrut(5));
-        
-        registerPanel.add(createFieldPanel("Contraseña: *", txtPassword, lblErrorPassword));
-        registerPanel.add(Box.createVerticalStrut(5)); 
-        
-        registerPanel.add(createFieldPanel("Confirmar contraseña: *", txtConfirmPassword, new JLabel(" ")));
-        registerPanel.add(Box.createVerticalStrut(5)); 
-        
-        registerPanel.add(createTermsPanel());
-        registerPanel.add(Box.createVerticalStrut(5)); 
         
         registerPanel.add(createButtonsPanel());
         
@@ -136,9 +122,6 @@ public class AddUserView extends JFrame {
     private void initializeComponents() {
         txtName = new RoundedTextField(8);
         txtEmail = new RoundedTextField(8);
-        txtPassword = new RoundedPasswordField(8);
-        txtConfirmPassword = new RoundedPasswordField(8);
-        
         
         cbxDay = new JComboBox<>();
         for (int i = 1; i <= 31; i++) cbxDay.addItem(i);
@@ -172,7 +155,6 @@ public class AddUserView extends JFrame {
         lblErrorEmail = new JLabel(" ");
         lblErrorDate = new JLabel(" ");
         lblErrorGender = new JLabel(" ");
-        lblErrorPassword = new JLabel(" ");
         lblErrorTerms = new JLabel(" ");
     }
     
@@ -314,28 +296,6 @@ public class AddUserView extends JFrame {
         return panel;
     }
     
-    private JPanel createTermsPanel() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setOpaque(false);
-        panel.setAlignmentX(LEFT_ALIGNMENT);
-        
-        JPanel checkPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        checkPanel.setOpaque(false);
-        checkPanel.setAlignmentX(LEFT_ALIGNMENT);
-        checkPanel.add(chkTerms);
-        
-        lblErrorTerms.setFont(AppFonts.small());
-        lblErrorTerms.setForeground(Color.RED);
-        lblErrorTerms.setAlignmentX(LEFT_ALIGNMENT);
-        
-        panel.add(checkPanel);
-        panel.add(Box.createVerticalStrut(1)); 
-        panel.add(lblErrorTerms);
-        
-        return panel;
-    }
-    
     private JPanel createButtonsPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -414,25 +374,6 @@ public class AddUserView extends JFrame {
             isValid = false;
         }
         
-        String pass = new String(txtPassword.getPassword());
-        String confirm = new String(txtConfirmPassword.getPassword());
-        
-        if (pass.isEmpty()) {
-            lblErrorPassword.setText("La contraseña es obligatoria");
-            isValid = false;
-        } else if (pass.length() < 6) {
-            lblErrorPassword.setText("Minimo 6 caracteres");
-            isValid = false;
-        } else if (!pass.equals(confirm)) {
-            lblErrorPassword.setText("Las contraseñas no coinciden");
-            isValid = false;
-        }
-        
-        if (!chkTerms.isSelected()) {
-            lblErrorTerms.setText("Debes aceptar los terminos");
-            isValid = false;
-        }
-        
         if (isValid) {
             JOptionPane.showMessageDialog(
                 this,
@@ -450,7 +391,6 @@ public class AddUserView extends JFrame {
         lblErrorEmail.setText(" ");
         lblErrorDate.setText(" ");
         lblErrorGender.setText(" ");
-        lblErrorPassword.setText(" ");
         lblErrorTerms.setText(" ");
     }
     
@@ -491,14 +431,6 @@ public class AddUserView extends JFrame {
         return txtEmail.getText().trim();
     }
     
-    public String getPassword() {
-        return new String(txtPassword.getPassword());
-    }
-    
-    public String getConfirmPassword() {
-        return new String(txtConfirmPassword.getPassword());
-    }
-    
     public String getSelectedGender() {
         if (rbMan.isSelected()) return "Hombre";
         if (rbWomen.isSelected()) return "Mujer";
@@ -533,10 +465,6 @@ public class AddUserView extends JFrame {
         lblErrorGender.setText(message);
     }
     
-    public void setPasswordError(String message) {
-        lblErrorPassword.setText(message);
-    }
-    
     public void setTermsError(String message) {
         lblErrorTerms.setText(message);
     }
@@ -557,7 +485,7 @@ public class AddUserView extends JFrame {
 		return new UserModel(
 	        getName(),
 	        getEmail(),
-	        getPassword(),
+	        null,
 	        getSelectedGender(),
 	        getBirthDate()
 	    );

@@ -22,7 +22,7 @@ public class HomeController {
         loadUsers();
         
         view.addAddListener(e -> add());
-        //view.addModifyListener(e -> modify());
+        view.addModifyListener(e -> modify());
         view.addDeleteListener(e -> delete());
     }
     
@@ -61,21 +61,25 @@ public class HomeController {
         }
     }
 
-    /*public void modify() {
+    public void modify() {
         UserModel selected = view.getSelectedUser();
         if (selected == null) {
             JOptionPane.showMessageDialog(view, "Selecciona un usuario primero.");
             return;
         }
 
-        AddUserView editView = new AddUserView();
-        new AddUserController(editView, selected, (updatedUser) -> {
-            try {
-                userRepository.update(selected.getEmail(), updatedUser);
-                loadUsers();
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(view, "Error al modificar: " + e.getMessage());
-            }
-        });
-    }*/
+        try {
+            UserModel full = userRepository.getUsers().stream()
+                .filter(u -> u.getEmail().equals(selected.getEmail()))
+                .findFirst().orElse(null);
+
+            if (full == null) return;
+
+            AddUserView editView = new AddUserView();
+            new AddUserController(editView, full, () -> loadUsers());
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(view, "Error: " + e.getMessage());
+        }
+    }
 }

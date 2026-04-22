@@ -10,17 +10,35 @@ import views.LoginView;
 public class AddUserController {
     private AddUserView view;
     private UserRepository userRepository;
+    private UserModel originalUser;
     private Runnable onSuccess;
-
+    
     public AddUserController(AddUserView view, Runnable onSuccess) {
     	this.view = view;
     	this.onSuccess = onSuccess;
     	this.userRepository = new UserRepository();
+    	this.originalUser = null;
     	initController();
+    	view.setVisible(true);
+    }
+    
+    public AddUserController(AddUserView view, UserModel originalUser, Runnable onSuccess) {
+    	this.view = view;
+    	this.onSuccess = onSuccess;
+    	this.userRepository = new UserRepository();
+    	this.originalUser = originalUser;
+    	view.prefillData(originalUser);
+    	initController();
+    	view.setVisible(true);
     }
     
     private void initController() {
-        view.setRegisterListener(e -> registerUser());
+    	view.setRegisterListener(e -> {
+            if (originalUser == null) 
+            	registerUser();
+            else 
+            	updateUser();
+        });
     }
 
     private void registerUser() {
@@ -31,6 +49,25 @@ public class AddUserController {
             view.showSuccessMessage("Registro exitoso");
             view.dispose();
             onSuccess.run();
+        }
+    }
+    
+    private void updateUser() {
+        UserModel updated = view.getUserData();
+
+        if (updated.getPassword() == null || updated.getPassword().isEmpty()) {
+            updated.setPassword(originalUser.getPassword());
+        }
+
+        if (validateUserData(updated)) {
+            try {
+                userRepository.update(originalUser.getEmail(), updated);
+                view.showSuccessMessage("Usuario actualizado");
+                view.dispose();
+                onSuccess.run();
+            } catch (IOException e) {
+                view.showError("Error al actualizar: " + e.getMessage());
+            }
         }
     }
 
@@ -47,18 +84,12 @@ public class AddUserController {
             isValid = false;
         }
 
-        if (!user.isValidPassword()) {
-            view.setPasswordError("Contraseña debe tener al menos 6 caracteres");
-            isValid = false;
-        }
-
         return isValid;
     }
 
     private void saveUser(UserModel user) {
         try {
             userRepository.save(user);
-            System.out.println("Usuario registrado: " + user.getEmail());
         } catch (IOException e) {
             System.out.println("Error al guardar el usuario");
             e.printStackTrace();

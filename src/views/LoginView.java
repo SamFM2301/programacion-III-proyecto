@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import components.*;
+import controllers.HomeController;
 import controllers.RegisterController;
 import utils.*;
 
@@ -228,7 +229,8 @@ public class LoginView extends JFrame implements KeyListener, FocusListener, Win
             resetErrorMsg();
             resetFields();
 
-            new MainView();
+            MainView mainView = new MainView();
+            new HomeController(mainView);
             dispose();
 
         } catch (InvalidUserException ex) {
