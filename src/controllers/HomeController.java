@@ -22,7 +22,7 @@ public class HomeController {
         loadUsers();
         
         view.addAddListener(e -> add());
-        //view.addModifyListener(e -> modify());
+        view.addModifyListener(e -> modify());
         view.addDeleteListener(e -> delete());
     }
     
@@ -61,7 +61,7 @@ public class HomeController {
         }
     }
 
-    /*public void modify() {
+    public void modify() {
         UserModel selected = view.getSelectedUser();
         if (selected == null) {
             JOptionPane.showMessageDialog(view, "Selecciona un usuario primero.");
@@ -77,5 +77,5 @@ public class HomeController {
                 JOptionPane.showMessageDialog(view, "Error al modificar: " + e.getMessage());
             }
         });
-    }*/
+    }
 }

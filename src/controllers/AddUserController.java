@@ -1,6 +1,7 @@
 package controllers;
 
 import java.io.IOException;
+import java.util.function.Consumer;
 
 import models.UserModel;
 import repository.UserRepository;
@@ -8,17 +9,28 @@ import views.AddUserView;
 import views.LoginView;
 
 public class AddUserController {
-    private AddUserView view;
+	private AddUserView view;
     private UserRepository userRepository;
     private Runnable onSuccess;
+    private UserModel editingUser;
+    private Consumer<UserModel> onEdit;
 
     public AddUserController(AddUserView view, Runnable onSuccess) {
-    	this.view = view;
-    	this.onSuccess = onSuccess;
-    	this.userRepository = new UserRepository();
-    	initController();
+        this.view = view;
+        this.onSuccess = onSuccess;
+        this.userRepository = new UserRepository();
+        initController();
     }
-    
+
+    public AddUserController(AddUserView view, UserModel editingUser, Consumer<UserModel> onEdit) {
+        this.view = view;
+        this.editingUser = editingUser;
+        this.onEdit = onEdit;
+        this.userRepository = new UserRepository();
+        view.prefillData(editingUser);
+        initController();
+    }
+
     private void initController() {
         view.setRegisterListener(e -> registerUser());
     }
@@ -27,10 +39,15 @@ public class AddUserController {
         UserModel user = view.getUserData();
 
         if (validateUserData(user)) {
-            saveUser(user);
-            view.showSuccessMessage("Registro exitoso");
+            if (editingUser != null) {
+                onEdit.accept(user);
+                view.showSuccessMessage("Usuario actualizado");
+            } else {
+                saveUser(user);
+                view.showSuccessMessage("Registro exitoso");
+                onSuccess.run();
+            }
             view.dispose();
-            onSuccess.run();
         }
     }
 
