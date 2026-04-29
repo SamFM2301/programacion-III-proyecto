@@ -53,7 +53,7 @@ public class AddUserView extends JFrame {
         Image icon = tk.getImage("src/assets/img/iniciosesion.png");
         setIconImage(icon);
         
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setMinimumSize(new Dimension(500, 700));
         setResizable(true);
         setLocationRelativeTo(null);

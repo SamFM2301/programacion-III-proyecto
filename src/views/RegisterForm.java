@@ -13,7 +13,6 @@ import utils.*;
 
 public class RegisterForm extends JFrame {
 
-    // Componentes de la vista
     private RoundedTextField txtName;
     private RoundedTextField txtEmail;
     private RoundedPasswordField txtPassword;
@@ -37,8 +36,7 @@ public class RegisterForm extends JFrame {
     private JLabel lblErrorGender;
     private JLabel lblErrorPassword;
     private JLabel lblErrorTerms;
-    
-    // Listeners para MVC
+
     private ActionListener registerListener;
     private ActionListener backToLoginListener;
     
@@ -440,7 +438,6 @@ public class RegisterForm extends JFrame {
         resetErrorLabels();
         boolean isValid = true;
         
-        // Validaciones
         if (txtName.getText().trim().isEmpty()) {
             lblErrorName.setText("El nombre es obligatorio");
             isValid = false;
