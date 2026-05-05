@@ -1,5 +1,6 @@
 package controllers;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -23,7 +24,29 @@ public class HomeController {
         
         view.addAddListener(e -> add());
         view.addModifyListener(e -> modify());
+        
         view.addDeleteListener(e -> delete());
+        view.addPdfListener(e -> exportPdf());
+    }
+    
+    private void exportPdf() {
+        List<UserModel> users;
+        try {
+            users = userRepository.getUsers();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(view, "Error al cargar usuarios: " + e.getMessage());
+            return;
+        }
+
+        File file = view.selectPdfFile();
+        if (file == null) return;
+
+        try {
+            new services.PDFExporter().exportUsers(users, file);
+            JOptionPane.showMessageDialog(view, "PDF exportado correctamente:\n" + file.getAbsolutePath());
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(view, "Error al exportar PDF: " + e.getMessage());
+        }
     }
     
     private void loadUsers() {

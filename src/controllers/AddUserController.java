@@ -28,27 +28,6 @@ public class AddUserController {
         initController();
     }
 
-    public AddUserController(AddUserView view) {
-		this.view = view;
-		userRepository = new UserRepository();
-		pdfExporter = new PDFExporter();
-		
-		this.view.getBtnAdd().addActionListener(e -> {
-			openForm(null);
-		});
-		
-		this.view.getBtnEdit().addActionListener(e -> {
-			int row = view.getSelectedRow();
-			if(row == -1) {
-				JOptionPane.showMessageDialog(view, "Selecciona un usuario");
-				return;
-			}
-			
-			openForm(model.getUserAt(row));
-		});
-		
-		this.view.getBtnPdf().addActionListener(e -> generatePdf());
-	}
     
     public AddUserController(AddUserView view, UserModel editingUser, Consumer<UserModel> onEdit) {
         this.view = view;

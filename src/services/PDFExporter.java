@@ -52,7 +52,7 @@ public class PDFExporter {
 
 			doc.add(new Paragraph("").setMarginTop(30));
 
-			float[] columnsWidth = { 1, 4, 4, 3, 3 };
+			float[] columnsWidth = { 1, 3, 4, 2, 3 };
 
 			Table table = new Table(UnitValue.createPercentArray(columnsWidth)).useAllAvailableWidth();
 
@@ -65,39 +65,39 @@ public class PDFExporter {
 			table.addHeaderCell(cell);
 
 			for (int i = 0; i < 2; i++) {
+			    Cell[] headerFooter = new Cell[] {
+			        new Cell().setTextAlignment(TextAlignment.CENTER).setBorderTop(new SolidBorder(1f))
+			                  .setBackgroundColor(new DeviceGray(0.80f)).add(new Paragraph("#")),
+			        new Cell().setTextAlignment(TextAlignment.CENTER).setBorderTop(new SolidBorder(1f))
+			                  .setBackgroundColor(new DeviceGray(0.80f)).add(new Paragraph("Nombre")),
+			        new Cell().setTextAlignment(TextAlignment.CENTER).setBorderTop(new SolidBorder(1f))
+			                  .setBackgroundColor(new DeviceGray(0.80f)).add(new Paragraph("Email")),
+			        new Cell().setTextAlignment(TextAlignment.CENTER).setBorderTop(new SolidBorder(1f))
+			                  .setBackgroundColor(new DeviceGray(0.80f)).add(new Paragraph("Género")),
+			        new Cell().setTextAlignment(TextAlignment.CENTER).setBorderTop(new SolidBorder(1f))
+			                  .setBackgroundColor(new DeviceGray(0.80f)).add(new Paragraph("Fecha de nacimiento")),
+			    };
 
-				Cell[] headerFooter = new Cell[] {
-						new Cell().setTextAlignment(TextAlignment.CENTER).setBorderTop(new SolidBorder(1f))
-								.setBackgroundColor(new DeviceGray(0.80f)).add(new Paragraph("#")),
-
-						new Cell().setTextAlignment(TextAlignment.CENTER).setBorderTop(new SolidBorder(1f))
-								.setBackgroundColor(new DeviceGray(0.80f)).add(new Paragraph("Nombre")),
-
-						new Cell().setTextAlignment(TextAlignment.CENTER).setBorderTop(new SolidBorder(1f))
-								.setBackgroundColor(new DeviceGray(0.80f)).add(new Paragraph("Email")),};
-
-				for (Cell celda : headerFooter) {
-					if (i == 0) {
-						table.addHeaderCell(celda);
-					} else {
-						table.addFooterCell(celda);
-					}
-				}
+			    for (Cell celda : headerFooter) {
+			        if (i == 0) table.addHeaderCell(celda);
+			        else        table.addFooterCell(celda);
+			    }
 			}
 			
 			int indice = 1;
 			
-			for(UserModel u : users) {
-				table.addCell(new Cell().setTextAlignment(TextAlignment.CENTER)
-                        .add(new Paragraph(String.valueOf(indice))));
-
-                table.addCell(new Cell().setTextAlignment(TextAlignment.LEFT)
-                        .add(new Paragraph(u.getName())));
-
-                table.addCell(new Cell().setTextAlignment(TextAlignment.LEFT)
-                        .add(new Paragraph(u.getEmail())));
-
-                indice++;
+			for (UserModel u : users) {
+			    table.addCell(new Cell().setTextAlignment(TextAlignment.CENTER)
+			            .add(new Paragraph(String.valueOf(indice))));
+			    table.addCell(new Cell().setTextAlignment(TextAlignment.LEFT)
+			            .add(new Paragraph(u.getName())));
+			    table.addCell(new Cell().setTextAlignment(TextAlignment.LEFT)
+			            .add(new Paragraph(u.getEmail())));
+			    table.addCell(new Cell().setTextAlignment(TextAlignment.LEFT)
+			            .add(new Paragraph(u.getGender() != null ? u.getGender() : "")));
+			    table.addCell(new Cell().setTextAlignment(TextAlignment.LEFT)
+			            .add(new Paragraph(u.getBirthDate() != null ? u.getBirthDate() : "")));
+			    indice++;
 			}
 
 			doc.add(table);
