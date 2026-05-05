@@ -1,10 +1,15 @@
 package controllers;
 
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.util.function.Consumer;
 
+import javax.swing.JOptionPane;
+
 import models.UserModel;
 import repository.UserRepository;
+import services.PDFExporter;
 import views.AddUserView;
 import views.LoginView;
 
@@ -14,6 +19,7 @@ public class AddUserController {
     private Runnable onSuccess;
     private UserModel editingUser;
     private Consumer<UserModel> onEdit;
+    private PDFExporter pdfExporter;
 
     public AddUserController(AddUserView view, Runnable onSuccess) {
         this.view = view;
@@ -22,11 +28,34 @@ public class AddUserController {
         initController();
     }
 
+    public AddUserController(AddUserView view) {
+		this.view = view;
+		userRepository = new UserRepository();
+		pdfExporter = new PDFExporter();
+		
+		this.view.getBtnAdd().addActionListener(e -> {
+			openForm(null);
+		});
+		
+		this.view.getBtnEdit().addActionListener(e -> {
+			int row = view.getSelectedRow();
+			if(row == -1) {
+				JOptionPane.showMessageDialog(view, "Selecciona un usuario");
+				return;
+			}
+			
+			openForm(model.getUserAt(row));
+		});
+		
+		this.view.getBtnPdf().addActionListener(e -> generatePdf());
+	}
+    
     public AddUserController(AddUserView view, UserModel editingUser, Consumer<UserModel> onEdit) {
         this.view = view;
         this.editingUser = editingUser;
         this.onEdit = onEdit;
         this.userRepository = new UserRepository();
+        pdfExporter = new PDFExporter();
         view.prefillData(editingUser);
         initController();
     }
@@ -72,6 +101,27 @@ public class AddUserController {
         return isValid;
     }
 
+    public void generatePdf() {
+		
+		File file = view.selectPdfFile();
+		
+		if(file == null) {
+			return;
+		}
+		
+		try {
+			pdfExporter.exportUsers(userRepository.getUsers(), file);
+			if(Desktop.isDesktopSupported()) {
+				Desktop.getDesktop().open(file);
+			}
+		}catch(Exception ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(view, "Error al exportar");
+		}
+		
+		
+	}
+    
     private void saveUser(UserModel user) {
         try {
             userRepository.save(user);

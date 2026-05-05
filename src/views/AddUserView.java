@@ -2,10 +2,13 @@ package views;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.time.LocalDate;
 
+import javax.swing.filechooser.FileNameExtensionFilter;
 import components.*;
 import controllers.LoginController;
 import models.UserModel;
@@ -562,4 +565,36 @@ public class AddUserView extends JFrame {
 	        getBirthDate()
 	    );
 	}
+	
+	
+	public File selectPdfFile() {
+		
+		String path = System.getProperty("user.home");
+		JFileChooser chooser = new JFileChooser(path);
+		
+		chooser.setSelectedFile(new File("reporte-usuarios.pdf"));
+		
+		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		chooser.setAcceptAllFileFilterUsed(false);
+		
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Documentos PDF",  "pdf");
+		chooser.addChoosableFileFilter(filter);
+		chooser.setFileFilter(filter);
+		
+		int option = chooser.showDialog(this, "Exportar PDF de usuarios");
+		
+		if(option != JFileChooser.APPROVE_OPTION) {
+			return null;
+		}
+		
+		File file = chooser.getSelectedFile();
+		
+		if(!file.getName().toLowerCase().endsWith(".pdf")) {
+			file = new File(file.getAbsolutePath() + ".pdf");
+		}
+		
+		return file;
+	}
+	
+	
 }

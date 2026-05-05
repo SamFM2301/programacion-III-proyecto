@@ -2,12 +2,14 @@ package views;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.util.List;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import javax.swing.filechooser.FileNameExtensionFilter;
 import components.RoundedButton;
 import models.UserModel;
 import utils.AppColors;
@@ -20,6 +22,7 @@ public class MainView extends JFrame {
     private JButton btnAdd;
     private JButton btnModify;
     private JButton btnDelete;
+    private JButton btnPdf;
 
     public MainView() {
         initFrame();
@@ -87,15 +90,18 @@ public class MainView extends JFrame {
         		AppColors.FIELDS, AppColors.TEXT_LIGHT, 13);
         btnDelete = createButton("Eliminar", new Color(180, 50, 50), 
         		AppColors.TEXT_LIGHT, 13);
+        btnPdf = createButton("Exportar PDF", new Color(180, 50, 50), 
+        		AppColors.TEXT_LIGHT, 13);
 
         addHover(btnAdd, AppColors.YELLOW, AppColors.YELLOW_HOVER);
         addHover(btnModify, AppColors.FIELDS, AppColors.FIELDS_HOVER);
         addHover(btnDelete, new Color(180, 50, 50), new Color(210, 70, 70));
-
+        addHover(btnPdf, new Color(180, 50, 50), new Color(210, 70, 70));
+        
         buttonsPanel.add(btnAdd);
         buttonsPanel.add(btnModify);
         buttonsPanel.add(btnDelete);
-
+        buttonsPanel.add(btnPdf);
         
         JButton btnLogOut = createButton("Cerrar Sesión",
         		AppColors.FIELDS, AppColors.TEXT_LIGHT, 13);
@@ -153,7 +159,12 @@ public class MainView extends JFrame {
     public void addDeleteListener(ActionListener listener) { 
     	btnDelete.addActionListener(listener); 
     	}
-
+    public void addPdfListener(ActionListener listener) { 
+    	btnPdf.addActionListener(listener); 
+    	}
+    
+    
+    
     public UserModel getSelectedUser() {
         int row = table.getSelectedRow();
         if (row == -1) return null;
@@ -166,6 +177,35 @@ public class MainView extends JFrame {
         );
     }
 
+    public File selectPdfFile() {
+		
+		String path = System.getProperty("user.home");
+		JFileChooser chooser = new JFileChooser(path);
+		
+		chooser.setSelectedFile(new File("reporte-usuarios.pdf"));
+		
+		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		chooser.setAcceptAllFileFilterUsed(false);
+		
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Documentos PDF",  "pdf");
+		chooser.addChoosableFileFilter(filter);
+		chooser.setFileFilter(filter);
+		
+		int option = chooser.showDialog(this, "Exportar PDF de usuarios");
+		
+		if(option != JFileChooser.APPROVE_OPTION) {
+			return null;
+		}
+		
+		File file = chooser.getSelectedFile();
+		
+		if(!file.getName().toLowerCase().endsWith(".pdf")) {
+			file = new File(file.getAbsolutePath() + ".pdf");
+		}
+		
+		return file;
+	}
+    
     public void loadUsers(List<UserModel> users) {
         tableModel.setRowCount(0);
         for (UserModel user : users) {
