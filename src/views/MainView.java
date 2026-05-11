@@ -23,7 +23,10 @@ public class MainView extends JFrame {
     private JButton btnModify;
     private JButton btnDelete;
     private JButton btnPdf;
-
+    private JButton btnMain;
+    private JButton btnUsersTable;
+    private JButton btnTemp;
+    
     public MainView() {
         initFrame();
         initComponents();
@@ -45,13 +48,34 @@ public class MainView extends JFrame {
         mainPanel.setBackground(AppColors.PANEL);
         mainPanel.setBorder(new EmptyBorder(25, 35, 25, 35));
 
+        JPanel usersPanel = new JPanel();
+        usersPanel.setLayout(new BoxLayout(usersPanel, BoxLayout.Y_AXIS));
+        usersPanel.setBackground(AppColors.PANEL);
         
-        JLabel lblTitle = new JLabel("Gestión de Usuarios");
-        lblTitle.setFont(AppFonts.title());
-        lblTitle.setForeground(AppColors.TEXT_LIGHT);
-        lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
-        lblTitle.setMaximumSize(new Dimension(Integer.MAX_VALUE, lblTitle.getPreferredSize().height));
+        JPanel sectionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
+        sectionPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
+        sectionPanel.setOpaque(false);
+        
+        btnMain = createButton("Inicio", AppColors.FIELDS, AppColors.TEXT_LIGHT, 16);
+        btnUsersTable = createButton("Usuarios", AppColors.FIELDS, AppColors.TEXT_LIGHT, 16);
+        
+        btnMain.addActionListener(e -> {
+            usersPanel.setVisible(false);
+            mainPanel.revalidate();
+            mainPanel.repaint();
+        });
 
+        btnUsersTable.addActionListener(e -> {
+            usersPanel.setVisible(true);
+            mainPanel.revalidate();
+            mainPanel.repaint();
+        });
+        
+        btnTemp = createButton("Otros", AppColors.FIELDS, AppColors.TEXT_LIGHT, 16);
+        
+        sectionPanel.add(btnMain);
+        sectionPanel.add(btnUsersTable);
+        sectionPanel.add(btnTemp);
        
         String[] columns = {"Nombre", "Email", "Genero", "Fecha de nacimiento"};
         tableModel = new DefaultTableModel(columns, 0) {
@@ -60,6 +84,7 @@ public class MainView extends JFrame {
             	return false; 
             	}
         };
+        
         table = new JTable(tableModel);
         table.setFillsViewportHeight(true);
         table.setFont(AppFonts.regular(12));
@@ -76,12 +101,12 @@ public class MainView extends JFrame {
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.getViewport().setBackground(new Color(35, 40, 58));
         scrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-        scrollPane.setAlignmentX(LEFT_ALIGNMENT);
+        scrollPane.setAlignmentX(CENTER_ALIGNMENT);
 
         
-        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 0));
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         buttonsPanel.setOpaque(false);
-        buttonsPanel.setAlignmentX(LEFT_ALIGNMENT);
+        buttonsPanel.setAlignmentX(CENTER_ALIGNMENT);
         buttonsPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
 
         btnAdd = createButton("Agregar",  
@@ -106,6 +131,7 @@ public class MainView extends JFrame {
         JButton btnLogOut = createButton("Cerrar Sesión",
         		AppColors.FIELDS, AppColors.TEXT_LIGHT, 13);
         btnLogOut.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        btnLogOut.setAlignmentX(CENTER_ALIGNMENT);
         addHover(btnLogOut, AppColors.FIELDS, AppColors.FIELDS_HOVER);
         btnLogOut.addActionListener(e -> {
             int option = JOptionPane.showConfirmDialog(this,
@@ -116,14 +142,18 @@ public class MainView extends JFrame {
             }
         });
 
-        mainPanel.add(lblTitle);
-        mainPanel.add(Box.createVerticalStrut(15));
-        mainPanel.add(scrollPane);
-        mainPanel.add(Box.createVerticalStrut(10));
-        mainPanel.add(buttonsPanel);
-        mainPanel.add(Box.createVerticalStrut(10));
-        mainPanel.add(btnLogOut);
+        
+        usersPanel.add(scrollPane);
+        usersPanel.add(Box.createVerticalStrut(10));
+        usersPanel.add(buttonsPanel);
+        usersPanel.add(Box.createVerticalStrut(10));
+        usersPanel.add(btnLogOut);
+        usersPanel.setVisible(false);
 
+        mainPanel.add(sectionPanel);
+        mainPanel.add(Box.createVerticalStrut(15));
+        mainPanel.add(usersPanel);
+        
         add(mainPanel);
         setVisible(true);
     }
@@ -150,19 +180,26 @@ public class MainView extends JFrame {
     }
 
     
+    public void setWindowSize(int width, int height) {
+		setSize(width, height);
+	}
+	
+	public void setWindowLocation(int x, int y) {
+		setLocation(x, y);
+	}
+    
     public void addAddListener(ActionListener listener)    { 
     	btnAdd.addActionListener(listener); 
-    	}
+    }
     public void addModifyListener(ActionListener listener) { 
     	btnModify.addActionListener(listener); 
-    	}
+    }
     public void addDeleteListener(ActionListener listener) { 
     	btnDelete.addActionListener(listener); 
-    	}
+    }
     public void addPdfListener(ActionListener listener) { 
     	btnPdf.addActionListener(listener); 
-    	}
-    
+    }
     
     
     public UserModel getSelectedUser() {

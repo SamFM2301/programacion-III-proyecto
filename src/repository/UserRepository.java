@@ -16,9 +16,16 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import models.UserModel;
 
 public class UserRepository {
-	private final String FILE = System.getProperty("user.dir") + "/src/assets/files/users.json";
+	//private final String FILE = System.getProperty("user.dir") + "/src/assets/files/users.json";
 
-	private final ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+	private final String FILE = "."
+			+ File.separator 
+			+ "data"
+			+ File.separator
+			+ "users.json";
+	
+	private final ObjectMapper mapper = 
+		new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 	
     public void save(UserModel user) throws IOException {
         List<UserModel> users = getUsers();
@@ -30,6 +37,8 @@ public class UserRepository {
     public List<UserModel> getUsers() throws IOException {
 
     	File file = new File(FILE);
+    	
+    	file.getParentFile().mkdirs();
     	
     	if(!file.exists() || file.length() == 0) {
     		return new ArrayList<>();
