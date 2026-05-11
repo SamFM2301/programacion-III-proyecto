@@ -22,8 +22,8 @@ public class HomeController {
     private MainView view;
     private UserRepository userRepository;
 
-    public HomeController(MainView view) {
-        this.view = view;
+    public HomeController() {
+        this.view = new MainView();
         this.userRepository = new UserRepository();
         
         loadWindowPreferences();

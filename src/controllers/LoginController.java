@@ -1,58 +1,83 @@
-
 package controllers;
 
+import javax.swing.*;
+
 import models.UserModel;
+import repository.LoginRepository;
 import views.LoginView;
-import views.MainView;
-import exceptions.*;
+import views.RegisterForm;
 
 public class LoginController {
-    private LoginView view;
-    
-    public LoginController(LoginView view) {
-        this.view = view;
-        initController();
-    }
-    
-    private void initController() {
-        view.setLoginListener(e -> authenticate());
-    }
-    
-    private void authenticate() {
-        try {
-            String email = view.getEmail();
-            String password = view.getPassword();
-            
-            validateCredentials(email, password);
-            
-            view.showSuccessMessage("Inicio de sesión exitoso");
-            
-            MainView mainView = new MainView();
-            new HomeController(mainView);
-            view.dispose();
-            
-        } catch (InvalidUserException | InvalidPasswordException e) {
-            view.showError(e.getMessage());
-        }
-    }
-    
-    private void validateCredentials(String email, String password) 
-            throws InvalidUserException, InvalidPasswordException {
-        
-        if (email.isEmpty()) {
-            throw new InvalidUserException("El correo es obligatorio");
-        }
-        
-        if (!email.equals("jcamacho@alu.uabcs.mx")) {
-            throw new InvalidUserException("Correo no válido");
-        }
-        
-        if (password.isEmpty()) {
-            throw new InvalidPasswordException("La contraseña es obligatoria");
-        }
-        
-        if (password.length() < 6) {
-            throw new InvalidPasswordException("Mínimo 6 caracteres");
-        }
-    }
+	private LoginView view;
+	private LoginRepository repository;
+	
+	public LoginController() {
+		this.view = new LoginView(this);
+		this.repository = new LoginRepository();
+	}
+
+	public void onLogin() {
+	    if(!isValidateFields()){
+			return;
+		}
+		
+		UserModel user = repository.login(view.getEmail(), view.getPassword());
+		
+		if(user == null) {
+			view.setErrorPassword("Correo o contraseña incorrectos");
+			return;
+		}
+		
+		JOptionPane.showMessageDialog(null, "Bienvenido", "Inicio de sesión", JOptionPane.INFORMATION_MESSAGE);
+		
+		new HomeController();
+		view.dispose();
+	}
+	
+	public void onRegister() {
+		view.resetFields();
+		view.resetErrorMsg();
+		
+		new RegisterController();
+		view.dispose();
+	}
+	
+	private boolean isValidateFields() {
+	    boolean emailOk = isValidEmail();
+	    boolean passwordOk = isValidPassword();
+	    
+	    if(emailOk && passwordOk)
+	    	return true;
+	    
+	    return false;
+	}
+	
+	private boolean isValidEmail() {
+		String email = view.getEmail();
+		
+		if (email.isEmpty()) {
+	        view.setErrorEmail("El correo es requerido");
+	        return false;
+	    }
+		
+	    if (!email.contains("@")) {
+	        view.setErrorEmail("Correo inválido");
+	        return false;
+	    }	
+	    
+	    view.setErrorEmail(" ");
+	    return true;
+	}
+	
+	private boolean isValidPassword() {
+		String password = view.getPassword();
+		
+		if (password.isEmpty()) {
+	        view.setErrorPassword("La contraseña es requerida");
+	        return false;
+	    }
+		
+		view.setErrorPassword(" ");
+		return true;
+	}
 }

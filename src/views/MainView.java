@@ -11,6 +11,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 import components.RoundedButton;
+import controllers.LoginController;
 import models.UserModel;
 import utils.AppColors;
 import utils.AppFonts;
@@ -321,7 +322,7 @@ public class MainView extends JFrame {
 
             if (option == JOptionPane.YES_OPTION) {
 
-                new LoginView();
+                new LoginController();
                 dispose();
             }
         });

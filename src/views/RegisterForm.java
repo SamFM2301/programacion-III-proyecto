@@ -404,8 +404,7 @@ public class RegisterForm extends JFrame {
             if (backToLoginListener != null) {
                 backToLoginListener.actionPerformed(e);
             } else {
-            	LoginView loginView = new LoginView();
-                new LoginController(loginView);
+                new LoginController();
                 dispose();
             }
         });
@@ -484,7 +483,7 @@ public class RegisterForm extends JFrame {
                 JOptionPane.INFORMATION_MESSAGE
             );
             
-            new LoginView();
+            new LoginController();
             dispose();
         }
     }

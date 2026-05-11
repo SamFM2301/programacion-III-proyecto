@@ -1,6 +1,8 @@
 package views;
 
 import exceptions.InvalidUserException;
+import models.UserModel;
+import repository.LoginRepository;
 import exceptions.InvalidPasswordException;
 
 import javax.swing.*;
@@ -8,6 +10,7 @@ import javax.swing.border.EmptyBorder;
 
 import components.*;
 import controllers.HomeController;
+import controllers.LoginController;
 import controllers.RegisterController;
 import utils.*;
 
@@ -16,6 +19,9 @@ import java.awt.event.*;
 
 public class LoginView extends JFrame implements KeyListener, FocusListener, WindowListener {
 
+	private LoginController controller;
+	private LoginRepository repository;
+	
     private RoundedTextField txtEmail;
     private RoundedPasswordField txtPassword;
     
@@ -24,7 +30,10 @@ public class LoginView extends JFrame implements KeyListener, FocusListener, Win
     
     private ActionListener loginListener;
     
-    public LoginView() {
+    public LoginView(LoginController controller) {
+    	this.controller = controller;
+    	this.repository = new LoginRepository();
+    	
         initFrame();
         initComponents();
     }
@@ -106,6 +115,8 @@ public class LoginView extends JFrame implements KeyListener, FocusListener, Win
             15
         );
         
+        btnLoginIn.addActionListener(e -> controller.onLogin());
+        
         btnLoginIn.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
                 changeBackground(btnLoginIn);
@@ -113,14 +124,6 @@ public class LoginView extends JFrame implements KeyListener, FocusListener, Win
             
             public void mouseExited(MouseEvent e) {
                 resetBackground(btnLoginIn);
-            }
-        });
-        
-        btnLoginIn.addActionListener(e -> {
-            if (loginListener != null) {
-                loginListener.actionPerformed(e);
-            } else {
-                buttonValidate();
             }
         });
         
@@ -221,47 +224,6 @@ public class LoginView extends JFrame implements KeyListener, FocusListener, Win
         return button;
     }
     
-    private void buttonValidate() {
-        try {
-            isValidFields();
-            
-            showMessageLoginSuccessful();
-            resetErrorMsg();
-            resetFields();
-
-            MainView mainView = new MainView();
-            new HomeController(mainView);
-            
-            dispose();
-
-        } catch (InvalidUserException ex) {
-            lblErrorEmail.setText(ex.getMessage());
-        } catch (InvalidPasswordException ex) {
-            lblErrorPassword.setText(ex.getMessage());
-        }
-    }
-    
-    private void isValidFields() throws InvalidUserException, InvalidPasswordException {
-        String textEmail = txtEmail.getText().trim();
-        String textPassword = new String(txtPassword.getPassword()).trim();
-
-        if (textEmail.isEmpty()) {
-            throw new InvalidUserException("El correo es obligatorio");
-        }
-
-        if (!textEmail.equals("jcamacho@alu.uabcs.mx")) {
-            throw new InvalidUserException("Correo no válido");
-        }
-
-        if (textPassword.isEmpty()) {
-            throw new InvalidPasswordException("La contraseña es obligatoria");
-        }
-
-        if (textPassword.length() < 6) {
-            throw new InvalidPasswordException("Mínimo 6 caracteres");
-        }
-    }
-    
     public void resetErrorMsg() {
         lblErrorEmail.setText(" ");
         lblErrorPassword.setText(" ");
@@ -283,13 +245,6 @@ public class LoginView extends JFrame implements KeyListener, FocusListener, Win
     
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (loginListener != null) {
-                loginListener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "login"));
-            } else {
-                buttonValidate();
-            }
-        }
     }
 
     @Override
@@ -334,7 +289,7 @@ public class LoginView extends JFrame implements KeyListener, FocusListener, Win
     
     public void handleRegistration() {
         RegisterForm registerForm = new RegisterForm();
-        new RegisterController(registerForm);
+        new RegisterController();
         dispose();
     }
     
@@ -343,12 +298,20 @@ public class LoginView extends JFrame implements KeyListener, FocusListener, Win
         this.loginListener = listener;
     }
     
-    public String getEmail() {
-        return txtEmail.getText().trim();
+    public String getEmail() { 
+    	return txtEmail.getText().trim(); 
     }
     
-    public String getPassword() {
-        return new String(txtPassword.getPassword()).trim();
+    public String getPassword() { 
+    	return new String(txtPassword.getPassword()); 
+    }
+
+    public void setErrorEmail(String msg) { 
+    	lblErrorEmail.setText(msg); 
+    }
+    
+    public void setErrorPassword(String msg) { 
+    	lblErrorPassword.setText(msg); 
     }
     
     public void showError(String message) {
@@ -357,13 +320,5 @@ public class LoginView extends JFrame implements KeyListener, FocusListener, Win
     
     public void showSuccessMessage(String message) {
         JOptionPane.showMessageDialog(this, message, "Exito", JOptionPane.INFORMATION_MESSAGE);
-    }
-    
-    public void setEmailError(String message) {
-        lblErrorEmail.setText(message);
-    }
-    
-    public void setPasswordError(String message) {
-        lblErrorPassword.setText(message);
     }
 }

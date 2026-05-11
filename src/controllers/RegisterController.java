@@ -11,8 +11,8 @@ public class RegisterController {
     private RegisterForm view;
     private UserRepository userRepository;
 
-    public RegisterController(RegisterForm view) {
-        this.view = view;
+    public RegisterController() {
+        this.view = new RegisterForm();
         this.userRepository = new UserRepository();
         initController();
     }
@@ -27,8 +27,7 @@ public class RegisterController {
         if (validateUserData(user)) {
             saveUser(user);
             view.showSuccessMessage("Registro exitoso");
-            LoginView loginView = new LoginView();
-            new LoginController(loginView);
+            new LoginController();
             view.dispose();
         }
     }

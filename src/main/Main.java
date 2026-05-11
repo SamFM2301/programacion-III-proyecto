@@ -13,11 +13,10 @@ import repository.UserRepository;
 
 public class Main {
     public static void main(String[] args) {
-        //LoginView loginView = new LoginView();
-        //LoginController controller = new LoginController(loginView);
+        new LoginController();
         
-    	MainView mainView = new MainView();
-    	new HomeController(mainView);
+    	//MainView mainView = new MainView();
+    	//new HomeController(mainView);
     	
         UserRepository repo = new UserRepository();
     }
