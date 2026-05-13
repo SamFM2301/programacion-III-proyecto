@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 
 import javax.swing.JOptionPane;
 
-import models.UserModel;
+import models.User;
 import repository.UserRepository;
 import services.PDFExporter;
 import views.AddUserView;
@@ -17,8 +17,8 @@ public class AddUserController {
 	private AddUserView view;
     private UserRepository userRepository;
     private Runnable onSuccess;
-    private UserModel editingUser;
-    private Consumer<UserModel> onEdit;
+    private User editingUser;
+    private Consumer<User> onEdit;
     private PDFExporter pdfExporter;
 
     public AddUserController(AddUserView view, Runnable onSuccess) {
@@ -29,7 +29,7 @@ public class AddUserController {
     }
 
     
-    public AddUserController(AddUserView view, UserModel editingUser, Consumer<UserModel> onEdit) {
+    public AddUserController(AddUserView view, User editingUser, Consumer<User> onEdit) {
         this.view = view;
         this.editingUser = editingUser;
         this.onEdit = onEdit;
@@ -44,7 +44,7 @@ public class AddUserController {
     }
 
     private void registerUser() {
-        UserModel user = view.getUserData();
+        User user = view.getUserData();
 
         if (validateUserData(user)) {
             if (editingUser != null) {
@@ -59,7 +59,7 @@ public class AddUserController {
         }
     }
 
-    private boolean validateUserData(UserModel user) {
+    private boolean validateUserData(User user) {
         boolean isValid = true;
 
         if (user.getName().isEmpty()) {
@@ -101,7 +101,7 @@ public class AddUserController {
 		
 	}
     
-    private void saveUser(UserModel user) {
+    private void saveUser(User user) {
         try {
             userRepository.save(user);
             System.out.println("Usuario registrado: " + user.getEmail());

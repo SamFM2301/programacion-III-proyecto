@@ -4,11 +4,11 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import models.UserModel;
+import models.User;
 
 public class UserTableModel extends AbstractTableModel{
 
-	private List<UserModel> users;
+	private List<User> users;
 	
 	private final String[] columns = {
 		"Nombre",
@@ -18,7 +18,7 @@ public class UserTableModel extends AbstractTableModel{
 		"Lenguajes"
 	};
 	
-	public UserTableModel(List<UserModel> users) {
+	public UserTableModel(List<User> users) {
 		this.users = users;
 	}
 	
@@ -40,7 +40,7 @@ public class UserTableModel extends AbstractTableModel{
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		
-		UserModel user = users.get(rowIndex);
+		User user = users.get(rowIndex);
 		
 		switch(columnIndex) {
 		case 0:

@@ -13,7 +13,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import models.UserModel;
+import models.User;
 
 public class UserRepository {
 	//private final String FILE = System.getProperty("user.dir") + "/src/assets/files/users.json";
@@ -27,14 +27,14 @@ public class UserRepository {
 	private final ObjectMapper mapper = 
 		new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 	
-    public void save(UserModel user) throws IOException {
-        List<UserModel> users = getUsers();
+    public void save(User user) throws IOException {
+        List<User> users = getUsers();
         users.add(user);
         updateAll(users);
     }
 
     // LEER A LOS USUARIOS
-    public List<UserModel> getUsers() throws IOException {
+    public List<User> getUsers() throws IOException {
 
     	File file = new File(FILE);
     	
@@ -46,23 +46,23 @@ public class UserRepository {
     	
     	return mapper.readValue(
 			file, 
-			new TypeReference<List<UserModel>>() {}
+			new TypeReference<List<User>>() {}
 		);
     }
    
     
     public void delete(String email) throws IOException {
-    	List<UserModel> users = getUsers();
+    	List<User> users = getUsers();
         users.removeIf(u -> u.getEmail().equals(email));
         updateAll(users);
     }
     
-    public void updateAll(List<UserModel> users) throws IOException {
+    public void updateAll(List<User> users) throws IOException {
     	mapper.writeValue(new File(FILE), users);
     }
     
-    public void update(String originalEmail, UserModel updatedUser) throws IOException {
-    	List<UserModel> users = getUsers();
+    public void update(String originalEmail, User updatedUser) throws IOException {
+    	List<User> users = getUsers();
         for (int i = 0; i < users.size(); i++) {
             if (users.get(i).getEmail().equals(originalEmail)) {
                 users.set(i, updatedUser);

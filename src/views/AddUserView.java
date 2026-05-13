@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import components.*;
 import controllers.LoginController;
-import models.UserModel;
+import models.User;
 import utils.*;
 
 public class AddUserView extends JFrame {
@@ -457,7 +457,7 @@ public class AddUserView extends JFrame {
         lblErrorTerms.setText(" ");
     }
     
-    public void prefillData(UserModel user) {
+    public void prefillData(User user) {
         txtName.setText(user.getName());
         txtEmail.setText(user.getEmail());
         
@@ -556,8 +556,8 @@ public class AddUserView extends JFrame {
         JOptionPane.showMessageDialog(this, message, "Exito", JOptionPane.INFORMATION_MESSAGE);
     }
 
-	public UserModel getUserData() {
-		return new UserModel(
+	public User getUserData() {
+		return new User(
 	        getName(),
 	        getEmail(),
 	        getPassword(),

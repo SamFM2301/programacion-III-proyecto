@@ -12,7 +12,7 @@ import javax.swing.table.DefaultTableModel;
 
 import components.RoundedButton;
 import controllers.LoginController;
-import models.UserModel;
+import models.User;
 import utils.AppColors;
 import utils.AppFonts;
 
@@ -413,7 +413,7 @@ public class MainView extends JFrame {
         btnPdf.addActionListener(listener);
     }
 
-    public UserModel getSelectedUser() {
+    public User getSelectedUser() {
 
         int row = table.getSelectedRow();
 
@@ -421,7 +421,7 @@ public class MainView extends JFrame {
             return null;
         }
 
-        return new UserModel(
+        return new User(
                 (String) tableModel.getValueAt(row, 0),
                 (String) tableModel.getValueAt(row, 1),
                 null,
@@ -476,11 +476,11 @@ public class MainView extends JFrame {
         return file;
     }
 
-    public void loadUsers(List<UserModel> users) {
+    public void loadUsers(List<User> users) {
 
         tableModel.setRowCount(0);
 
-        for (UserModel user : users) {
+        for (User user : users) {
 
             tableModel.addRow(new Object[]{
                     user.getName(),

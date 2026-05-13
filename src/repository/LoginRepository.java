@@ -4,19 +4,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import config.DatabaseConnection;
-import models.UserModel;
+import models.User;
+import utils.PasswordUtils;
 
 public class LoginRepository {
 	
-	public UserModel login(String email, String password) {
+	public User login(String email, String password) {
 		
-		String sql1 = "SELECT id, email, password FROM users WHERE email = '"
-				+ email + "' AND password = '" + password + "'";
-		
-		String sql = "SELECT id, email, password FROM users WHERE email = ? AND password = ?";
+		String sql = "SELECT id, email, password FROM users WHERE email = ?";
 		
 		try (
 			Connection conn = DatabaseConnection.getConnection();
@@ -24,11 +21,18 @@ public class LoginRepository {
 		) {
 			
 			stmt.setString(1, email);
-			stmt.setString(2, password);
 			ResultSet rs = stmt.executeQuery();
 			
 			if (rs.next()) {
-				UserModel user = new UserModel();
+				String hashedPassword = rs.getString("password");
+				System.out.println(hashedPassword);
+				
+				boolean correctPassword = PasswordUtils.checkPassword(password, hashedPassword);
+				
+				if (!correctPassword) 
+					return null;
+				
+				User user = new User();
 				user.setId(rs.getInt("id"));
 				user.setEmail(rs.getString("email"));
 				

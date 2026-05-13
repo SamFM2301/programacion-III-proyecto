@@ -8,8 +8,9 @@ import java.util.List;
 
 import controllers.HomeController;
 import controllers.LoginController;
-import models.UserModel;
+import models.User;
 import repository.UserRepository;
+import utils.PasswordUtils;
 
 public class Main {
     public static void main(String[] args) {
@@ -17,7 +18,7 @@ public class Main {
         
     	//MainView mainView = new MainView();
     	//new HomeController(mainView);
-    	
+        
         UserRepository repo = new UserRepository();
     }
 }

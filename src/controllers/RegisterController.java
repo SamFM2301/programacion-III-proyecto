@@ -2,7 +2,7 @@ package controllers;
 
 import java.io.IOException;
 
-import models.UserModel;
+import models.User;
 import repository.UserRepository;
 import views.RegisterForm;
 import views.LoginView;
@@ -22,7 +22,7 @@ public class RegisterController {
     }
 
     private void registerUser() {
-        UserModel user = view.getUserData();
+        User user = view.getUserData();
 
         if (validateUserData(user)) {
             saveUser(user);
@@ -32,7 +32,7 @@ public class RegisterController {
         }
     }
 
-    private boolean validateUserData(UserModel user) {
+    private boolean validateUserData(User user) {
         boolean isValid = true;
 
         if (user.getName().isEmpty()) {
@@ -53,7 +53,7 @@ public class RegisterController {
         return isValid;
     }
 
-    private void saveUser(UserModel user) {
+    private void saveUser(User user) {
         try {
             userRepository.save(user);
             System.out.println("Usuario registrado: " + user.getEmail());

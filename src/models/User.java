@@ -3,7 +3,7 @@ package models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserModel {
+public class User {
     private int id;
 	private String name;
     private String email;
@@ -12,9 +12,9 @@ public class UserModel {
     private String birthDate;
     
    
-    public UserModel() {}
+    public User() {}
     
-    public UserModel(String name, String email, String password, String gender, String birthDate) {
+    public User(String name, String email, String password, String gender, String birthDate) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -71,7 +71,7 @@ public class UserModel {
                birthDate;
     }
 
-    public static UserModel fromCsv(String userData) {
+    public static User fromCsv(String userData) {
         String[] data = userData.split(",");
 
         String name = data[0];
@@ -80,6 +80,6 @@ public class UserModel {
         String gender = data[3];
         String birthDate = data[4];
 
-        return new UserModel(name, email, password, gender, birthDate);
+        return new User(name, email, password, gender, birthDate);
     }
 }

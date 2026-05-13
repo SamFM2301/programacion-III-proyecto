@@ -2,7 +2,7 @@ package controllers;
 
 import javax.swing.*;
 
-import models.UserModel;
+import models.User;
 import repository.LoginRepository;
 import views.LoginView;
 import views.RegisterForm;
@@ -21,7 +21,7 @@ public class LoginController {
 			return;
 		}
 		
-		UserModel user = repository.login(view.getEmail(), view.getPassword());
+		User user = repository.login(view.getEmail(), view.getPassword());
 		
 		if(user == null) {
 			view.setErrorPassword("Correo o contraseña incorrectos");

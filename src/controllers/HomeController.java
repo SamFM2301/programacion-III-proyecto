@@ -10,7 +10,7 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import models.UserModel;
+import models.User;
 import repository.UserRepository;
 import utils.Config;
 import views.MainView;
@@ -90,7 +90,7 @@ public class HomeController {
 	}
     
     private void exportPdf() {
-        List<UserModel> users;
+        List<User> users;
         try {
             users = userRepository.getUsers();
         } catch (IOException e) {
@@ -111,7 +111,7 @@ public class HomeController {
     
     private void loadUsers() {
         try {
-            List<UserModel> users = userRepository.getUsers();
+            List<User> users = userRepository.getUsers();
             view.loadUsers(users);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(view, "Error al cargar usuarios: " + e.getMessage());
@@ -124,7 +124,7 @@ public class HomeController {
     }
     
     public void delete() {
-        UserModel selected = view.getSelectedUser();
+        User selected = view.getSelectedUser();
         if (selected == null) {
             JOptionPane.showMessageDialog(view, "Selecciona un usuario primero.");
             return;
@@ -145,7 +145,7 @@ public class HomeController {
     }
 
     public void modify() {
-        UserModel selected = view.getSelectedUser();
+        User selected = view.getSelectedUser();
         if (selected == null) {
             JOptionPane.showMessageDialog(view, "Selecciona un usuario primero.");
             return;

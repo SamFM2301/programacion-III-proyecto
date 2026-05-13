@@ -1,7 +1,7 @@
 package views;
 
 import exceptions.InvalidUserException;
-import models.UserModel;
+import models.User;
 import repository.LoginRepository;
 import exceptions.InvalidPasswordException;
 

@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 import components.*;
 import controllers.LoginController;
-import models.UserModel;
+import models.User;
 import utils.*;
 
 public class RegisterForm extends JFrame {
@@ -484,7 +484,7 @@ public class RegisterForm extends JFrame {
             );
             
             new LoginController();
-            dispose();
+            this.dispose();
         }
     }
     
@@ -578,8 +578,8 @@ public class RegisterForm extends JFrame {
         JOptionPane.showMessageDialog(this, message, "Exito", JOptionPane.INFORMATION_MESSAGE);
     }
 
-	public UserModel getUserData() {
-		return new UserModel(
+	public User getUserData() {
+		return new User(
 	        getName(),
 	        getEmail(),
 	        getPassword(),

@@ -1,4 +1,5 @@
 [ {
+  "id" : 0,
   "name" : "Samuel",
   "email" : "samuel@gmail.com",
   "password" : "1234567890",
@@ -7,6 +8,7 @@
   "validEmail" : true,
   "validPassword" : true
 }, {
+  "id" : 0,
   "name" : "Isaac",
   "email" : "isaac@gmail.com",
   "password" : "1234567890",
@@ -15,6 +17,7 @@
   "validEmail" : true,
   "validPassword" : true
 }, {
+  "id" : 0,
   "name" : "Azarias",
   "email" : "azarias@gmail.com",
   "password" : "1234567890",
@@ -23,6 +26,7 @@
   "validEmail" : true,
   "validPassword" : true
 }, {
+  "id" : 0,
   "name" : "Irving",
   "email" : "irving@gmail.com",
   "password" : "1234567890",
@@ -31,6 +35,7 @@
   "validEmail" : true,
   "validPassword" : true
 }, {
+  "id" : 0,
   "name" : "Damian",
   "email" : "robin@gmail.com",
   "password" : "1234567890",
@@ -39,6 +44,7 @@
   "validEmail" : true,
   "validPassword" : true
 }, {
+  "id" : 0,
   "name" : "Papita",
   "email" : "papita@gmail.com",
   "password" : "1234567890",
@@ -47,11 +53,30 @@
   "validEmail" : true,
   "validPassword" : true
 }, {
+  "id" : 0,
   "name" : "nigga",
   "email" : "niga@gmail.com",
   "password" : "6767676767",
   "gender" : "Otro",
   "birthDate" : "6/7/1967",
+  "validEmail" : true,
+  "validPassword" : true
+}, {
+  "id" : 0,
+  "name" : "samuel",
+  "email" : "samuel@gmail.com",
+  "password" : "123456",
+  "gender" : "Hombre",
+  "birthDate" : "12/1/2006",
+  "validEmail" : true,
+  "validPassword" : true
+}, {
+  "id" : 0,
+  "name" : "qwer",
+  "email" : "qwe@gmail.com",
+  "password" : "123456",
+  "gender" : "Hombre",
+  "birthDate" : "1/1/2026",
   "validEmail" : true,
   "validPassword" : true
 } ]
